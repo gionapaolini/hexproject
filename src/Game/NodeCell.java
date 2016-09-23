@@ -30,7 +30,6 @@ public class NodeCell {
 
     public boolean isConnectedTo(NodeCell second){
         this.setChecked(true);
-        System.out.println("Checking node");
         if(checkNode(upperL, second) || checkNode(upperR, second) || checkNode(right, second)
                 || checkNode(lowerR, second) || checkNode(lowerL, second) || checkNode(left, second))
             return true;

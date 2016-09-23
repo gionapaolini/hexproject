@@ -26,11 +26,11 @@ public class Match {
         nTurn = 0;
         players = new Player[2];
         if(gameType){
-            players[0] = new Human();
-            players[1] = new Bot();
+            players[0] = new Human(this, true);
+            players[1] = new Bot(this, false);
         }else {
-            players[0] = new Human();
-            players[1] = new Human();
+            players[0] = new Human(this, true);
+            players[1] = new Human(this, false);
         }
 
         if(firstPlayer){
@@ -86,6 +86,10 @@ public class Match {
         notifyObservers();
     }
 
+    public Player getCurrentPlayer(){
+        return currentPlayer;
+    }
+
     public void notifyObservers(){
 
     }
@@ -96,6 +100,7 @@ public class Match {
         if(currentPlayer instanceof Bot){
             currentPlayer.makeMove();
         }
+        board.printGrid();
         notifyObservers();
     }
 
@@ -103,6 +108,7 @@ public class Match {
         paused=true;
         currentPlayer = null;
         notifyObservers();
+        System.out.println("ENDED");
     }
 
 
@@ -131,16 +137,31 @@ public class Match {
     }
 
     public void putStone(int x, int y){
+        if(x>=board.getGrid().length || y>=board.getGrid().length || x<0 || y<0 || board.getGrid()[x][y].getStatus()!=0){
+            return;
+        }
         if(currentPlayer.color==true){
             board.getGrid()[x][y].setStatus((byte)1);
+            history.addRecord(new Record(true,(byte)x,(byte)y));
+            board.printGrid();
             hasWon(true);
-            switchPlayer(players[1]);
-        }else {
+            if(currentPlayer!=null) {
+                switchPlayer(players[1]);
+            }
+        }else{
             board.getGrid()[x][y].setStatus((byte)2);
+            history.addRecord(new Record(false,(byte)x,(byte)y));
+            board.printGrid();
             hasWon(false);
-            switchPlayer(players[0]);
+            if(currentPlayer!=null) {
+                switchPlayer(players[0]);
+            }
         }
         notifyObservers();
+    }
+
+    public void printGrid(){
+        board.printGrid();
     }
 
 

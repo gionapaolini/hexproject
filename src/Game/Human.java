@@ -9,6 +9,11 @@ public class Human extends Player {
 
     }
 
+    public Human(Match match, boolean color){
+        this.match = match;
+        this.color = color;
+    }
+
     public void makeMove(int x, int y){
         match.putStone(x,y);
     }

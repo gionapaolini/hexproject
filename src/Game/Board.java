@@ -48,7 +48,7 @@ public class Board {
             for(int i=0;i<grid[0].length;i++){
                 for(int j=0;j<grid[0].length;j++){
                     uncheckGrid();
-                    if(grid[0][i].isConnectedTo(grid[grid.length-1][j])){
+                    if(grid[0][i].isConnected(grid[grid.length-1][j])){
                         return true;
                     }
 
@@ -60,7 +60,7 @@ public class Board {
             for(int i=0;i<grid.length;i++){
                 for(int j=0;j<grid.length;j++){
                     uncheckGrid();
-                    if(grid[i][0].isConnectedTo(grid[j][grid[0].length-1])){
+                    if(grid[i][0].isConnected(grid[j][grid[0].length-1])){
                         uncheckGrid();
                         return true;
                     }
@@ -78,7 +78,26 @@ public class Board {
         }
     }
 
+    public void printGrid(){
+        System.out.println();
+        System.out.println();
 
+        for(int i=0;i<grid.length;i++){
+            System.out.print("|");
+            for(int j=0;j<grid.length;j++){
+                if(grid[i][j].getStatus()==0){
+                    System.out.print(" X");
+                }else if(grid[i][j].getStatus()==1){
+                    System.out.print(" O");
+                }else {
+                    System.out.print(" Q");
+                }
+                System.out.print(" |");
+            }
+            System.out.println();
+        }
+
+    }
     public NodeCell[][] getGrid() {
         return grid;
     }
