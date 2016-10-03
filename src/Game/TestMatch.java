@@ -31,10 +31,42 @@ public class TestMatch {
             }
             System.out.print("Player "+pl+" make your move: ");
             Scanner in = new Scanner(System.in);
-            int x = in.nextInt();
-            int y = in.nextInt();
-            Human play = (Human) match.getCurrentPlayer();
-            play.makeMove(x,y);
+            String choice = in.next();
+            int x, y;
+            if(choice.equals("l")){
+                match.loadMatch();
+            }else if(choice.equals("s")){
+                match.saveMatch();
+            }else if(choice.equals("undo")){
+                match.undo();
+            }else{
+                try{
+                    x = Integer.parseInt(choice);
+                    if(x>=0 && x<=10){
+                        try{
+                            y = Integer.parseInt(in.next());
+                            if(y>=0 && y<=10){
+                                Human play = (Human) match.getCurrentPlayer();
+                                play.makeMove(x,y);
+                            }else {
+                                System.out.println("Y coord not in the range, try again!");
+                            }
+                        }catch (NumberFormatException e){
+                            System.out.println("Error, try again. 2");
+                        }
+
+                    }else{
+                        System.out.println("X coord not in the range, try again!");
+                    }
+                }catch(NumberFormatException e){
+                    System.out.println("Error, try again. 1");
+                }
+
+
+
+
+            }
+
         }
 
     }
