@@ -16,12 +16,15 @@ public class Match {
     private boolean paused, rule, gameType, learningMode; //gameType true if singleplayer, false if multiplayer
     public History history;
     private short nTurn;
+    private BoardPanel gamePanel;
 
     public Match(boolean gameType, boolean firstPlayer, boolean rule, boolean learningMode, int sideLenght){
         this.gameType = gameType;
         this.rule = rule;
         this.learningMode = learningMode;
         board = new Board(sideLenght);
+
+
         history = new History();
         nTurn = 0;
         players = new Player[2];
@@ -111,6 +114,10 @@ public class Match {
         System.out.println("ENDED");
     }
 
+    public void setPanel(BoardPanel board){
+        gamePanel = board;
+    }
+
 
     public void pause(){
         paused = !paused;
@@ -144,6 +151,7 @@ public class Match {
             board.getGrid()[x][y].setStatus((byte)1);
             history.addRecord(new Record(true,(byte)x,(byte)y));
             board.printGrid();
+            gamePanel.repaint();
             hasWon(true);
             if(currentPlayer!=null) {
                 switchPlayer(players[1]);
@@ -152,6 +160,7 @@ public class Match {
             board.getGrid()[x][y].setStatus((byte)2);
             history.addRecord(new Record(false,(byte)x,(byte)y));
             board.printGrid();
+            gamePanel.repaint();
             hasWon(false);
             if(currentPlayer!=null) {
                 switchPlayer(players[0]);
@@ -164,8 +173,9 @@ public class Match {
         board.printGrid();
     }
 
-
-
+    public Board getBoard(){
+        return board;
+    }
 
 
 }

@@ -106,7 +106,7 @@ public class NodeCell {
         this.status = status;
     }
 
-    private boolean isChecked() {
+    public boolean isChecked() {
         return checked;
     }
 
