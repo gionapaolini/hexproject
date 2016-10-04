@@ -13,6 +13,7 @@ public class BoardPanel extends JPanel implements Observer{
 
     public BoardPanel(Match m){
         match = m;
+
     }
     /*
      *
@@ -49,23 +50,25 @@ public class BoardPanel extends JPanel implements Observer{
 
     public void paint(Graphics g){
 
+        int startXT=0;
+        int startYT=0;
         //Color borders
         int[] t1x = new int[3];
-        t1x[0] = 40; t1x[1] = 520; t1x[2] = 400;
+        t1x[0] = startXT+0; t1x[1] = startXT+480; t1x[2] = startXT+360;
         int[] t1y = new int[3];
-        t1y[0] = 70; t1y[1] = 70; t1y[2] = 250;
+        t1y[0] = startYT+0; t1y[1] = startYT+0; t1y[2] = startYT+180;
         int[] t2x = new int[3];
-        t2x[0] = 520; t2x[1] = 760; t2x[2] = 400;
+        t2x[0] = startXT+480; t2x[1] = startXT+720; t2x[2] = startXT+360;
         int[] t2y = new int[3];
-        t2y[0] = 70; t2y[1] = 430; t2y[2] = 250;
+        t2y[0] = startYT+0; t2y[1] = startYT+360; t2y[2] = startYT+180;
         int[] t3x = new int[3];
-        t3x[0] = 280; t3x[1] = 760; t3x[2] = 400;
+        t3x[0] = startXT+240; t3x[1] = startXT+720; t3x[2] = startXT+360;
         int[] t3y = new int[3];
-        t3y[0] = 430; t3y[1] = 430; t3y[2] = 250;
+        t3y[0] = startYT+360; t3y[1] = startYT+360; t3y[2] = startYT+180;
         int[] t4x = new int[3];
-        t4x[0] = 280; t4x[1] = 40; t4x[2] = 400;
+        t4x[0] = startXT+240; t4x[1] = startXT+0; t4x[2] = startXT+360;
         int[] t4y = new int[3];
-        t4y[0] = 430; t4y[1] = 70; t4y[2] = 250;
+        t4y[0] = startYT+360; t4y[1] = startYT+0; t4y[2] = startYT+180;
 
         g.setColor(Color.red);
         g.fillPolygon(t1x,t1y,3);
@@ -78,8 +81,8 @@ public class BoardPanel extends JPanel implements Observer{
         //cells
         NodeCell[][] grid = match.getBoard().getGrid();
 
-        int startX = 100;
-        int startY = 100;
+        int startX = 60;
+        int startY = 30;
 
 
         for(int i=0;i<grid.length;i++){
@@ -99,24 +102,24 @@ public class BoardPanel extends JPanel implements Observer{
 
 
             }
-            startY=100;
-            startX=100+((1+i)*(2*20));
+            startY=30;
+            startX=60+((1+i)*(2*20));
         }
         //labels
         g.setColor(Color.white);
-        g.drawString("A        B        C        D        E        F        G        H        I         J        K",76,85);
-        g.drawString("A        B        C        D        E        F        G        H        I         J        K",315,425);
+        g.drawString("A        B        C        D        E        F        G        H        I         J        K",36,15);
+        g.drawString("A        B        C        D        E        F        G        H        I         J        K",275,355);
 
-        int startLX=65;
-        int startLY=105;
+        int startLX=25;
+        int startLY=35;
         for(int i = 1;i<grid.length+1;i++){
             g.drawString(Integer.toString(i),startLX,startLY);
             startLX=startLX+20;
             startLY=startLY+30;
         }
 
-        int startRX=521;
-        int startRY=105;
+        int startRX=481;
+        int startRY=35;
         for(int j = 1;j<grid.length+1;j++){
             g.drawString(Integer.toString(j),startRX,startRY);
             startRX=startRX+20;

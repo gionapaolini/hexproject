@@ -14,7 +14,7 @@ public class TestMatch {
         BoardPanel gamePanel = new BoardPanel(null);
         Match match = new Match(false,false,false,false,11, gamePanel);
         JFrame frame = new JFrame("GameHex");
-        frame.setSize(700,500);
+        frame.setSize(720,382);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         frame.add(gamePanel);
