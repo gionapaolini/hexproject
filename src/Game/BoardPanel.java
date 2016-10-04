@@ -7,7 +7,7 @@ import java.awt.*;
  * Created by PabloPSoto and Lukas on 28/09/2016.
  */
 
-public class BoardPanel extends JPanel{
+public class BoardPanel extends JPanel implements Observer{
 
     Match match;
 
@@ -17,6 +17,9 @@ public class BoardPanel extends JPanel{
     /*
      *
      */
+    public void update(){
+        repaint();
+    }
     private Polygon getPolygon(int midX, int midY){
         int length = 20;
 

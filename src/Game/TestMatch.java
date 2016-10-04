@@ -10,9 +10,9 @@ import java.util.Scanner;
  */
 public class TestMatch {
     public static void main(String[] args) throws InterruptedException, IOException {
-        Match match = new Match(false,false,false,false,11);
-        BoardPanel gamePanel = new BoardPanel(match);
-        match.setPanel(gamePanel);
+
+        BoardPanel gamePanel = new BoardPanel(null);
+        Match match = new Match(false,false,false,false,11, gamePanel);
         JFrame frame = new JFrame("GameHex");
         frame.setSize(700,500);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

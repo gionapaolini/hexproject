@@ -5,27 +5,32 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by giogio on 9/17/16.
  */
 public class Match {
     private Player[] players;
+    private List<Observer> observers;
     private Board board;
     private Player currentPlayer;
     private Date startTime, endTime;
     private boolean paused, rule, gameType, learningMode; //gameType true if singleplayer, false if multiplayer
     public History history;
     private short nTurn,sideLength;
-    private BoardPanel gamePanel;
 
-    public Match(boolean gameType, boolean firstPlayer, boolean rule, boolean learningMode, int sideLenght){
+    public Match(boolean gameType, boolean firstPlayer, boolean rule, boolean learningMode, int sideLenght, BoardPanel gamePanel){
         this.gameType = gameType;
         this.rule = rule;
         this.learningMode = learningMode;
         this.sideLength = (short) sideLenght;
         board = new Board(sideLenght);
+        observers = new ArrayList<Observer>();
+        gamePanel.match = this;
+        observers.add(gamePanel);
 
 
         history = new History();
@@ -150,7 +155,9 @@ public class Match {
     }
 
     public void notifyObservers(){
-
+        for(Observer obs: observers){
+            obs.update();
+        }
     }
 
     public void startMatch(){
@@ -168,10 +175,6 @@ public class Match {
         currentPlayer = null;
         notifyObservers();
         System.out.println("ENDED");
-    }
-
-    public void setPanel(BoardPanel board){
-        gamePanel = board;
     }
 
 
@@ -208,7 +211,6 @@ public class Match {
         if(currentPlayer.color==true){
             board.getGrid()[x][y].setStatus((byte)1);
             history.addRecord(new Record(true,(byte)x,(byte)y));
-            gamePanel.repaint();
             hasWon(true);
             if(currentPlayer!=null) {
                 switchPlayer(players[1]);
@@ -216,7 +218,6 @@ public class Match {
         }else{
             board.getGrid()[x][y].setStatus((byte)2);
             history.addRecord(new Record(false,(byte)x,(byte)y));
-            gamePanel.repaint();
             hasWon(false);
             if(currentPlayer!=null) {
                 switchPlayer(players[0]);
@@ -273,7 +274,7 @@ public class Match {
                 currentPlayer = players[0];
             }
         }
-        gamePanel.repaint();
+        notifyObservers();
 
     }
 
