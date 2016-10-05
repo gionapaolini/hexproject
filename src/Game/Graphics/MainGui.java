@@ -34,7 +34,7 @@ public class MainGui extends JFrame implements Observer {
             SettingsGui settingsGui = (SettingsGui) arg;
             Match match = new Match(settingsGui.getPlayermode(), false, settingsGui.getSwapRule() , settingsGui.getLearningmode(),11);
             BoardPanel bp = new BoardPanel(match);
-            this.setSize(745,422);
+            this.setSize(bp.getSize());
 
             Container contain = getContentPane();
             contain.removeAll();
@@ -42,8 +42,6 @@ public class MainGui extends JFrame implements Observer {
             bp.repaint();
             this.validate();
             this.repaint();
-
-
         }
 
     }

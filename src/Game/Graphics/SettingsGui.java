@@ -24,18 +24,20 @@ public class SettingsGui extends Observable {
     private JLabel botlabel;
 
     public SettingsGui(){
-
+        botdifficulty.setVisible(false);
+        botlabel.setVisible(false);
 
         ComboBoxModel<String> cbm = new DefaultComboBoxModel(PlayerMode.values());
         playermode.setModel(cbm);
         playermode.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
-                if(playermode.getSelectedItem().equals(PlayerMode.HumanVsHuman.toString())){
-                    botdifficulty.setVisible(false);
-                    botlabel.setVisible(false);
-                }else{
+                String selected = playermode.getSelectedItem().toString();
+                if(!selected.equals(PlayerMode.HumanVsHuman.toString())){
                     botdifficulty.setVisible(true);
                     botlabel.setVisible(true);
+                }else{
+                    botdifficulty.setVisible(false);
+                    botlabel.setVisible(false);
                 }
 
             }

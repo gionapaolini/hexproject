@@ -13,9 +13,12 @@ public class BoardPanel extends JPanel implements Observer{
 
     public BoardPanel(Match m){
         match = m;
+        setSize(745,422);
 
 
     }
+
+
     /*
      *
      */
