@@ -14,6 +14,7 @@ public class BoardPanel extends JPanel implements Observer{
     public BoardPanel(Match m){
         match = m;
 
+
     }
     /*
      *
@@ -105,18 +106,38 @@ public class BoardPanel extends JPanel implements Observer{
             startY=30;
             startX=60+((1+i)*(2*20));
         }
+
+
+        String LetterString = "ABCDEFGHIJK";
+        int startLX=36;
+        int startLY=15;
+        for(int i = 0;i<LetterString.length();i++){
+            g.drawString(String.valueOf(LetterString.charAt(i)),startLX,startLY);
+            startLX=startLX+40;
+
+        }
+
+        LetterString = "ABCDEFGHIJK";
+        startLX=275;
+        startLY=355;
+        for(int i = 0;i<LetterString.length();i++){
+            g.drawString(String.valueOf(LetterString.charAt(i)),startLX,startLY);
+           startLX=startLX+40;
+
+        }
+
+
+
         //labels
         g.setColor(Color.white);
-        g.drawString("A        B        C        D        E        F        G        H        I         J        K",36,15);
-        g.drawString("A        B        C        D        E        F        G        H        I         J        K",275,355);
-
-        int startLX=25;
-        int startLY=35;
+        startLX=25;
+        startLY=35;
         for(int i = 1;i<grid.length+1;i++){
             g.drawString(Integer.toString(i),startLX,startLY);
             startLX=startLX+20;
             startLY=startLY+30;
         }
+
 
         int startRX=481;
         int startRY=35;

@@ -1,7 +1,5 @@
 package Game;
 
-import Graphics.GameType;
-
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.*;
@@ -10,41 +8,39 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
+import java.util.Observable;
 
 
 /** A Match is a game happening either between player vs player or player vs gametype
  *
  * Created by giogio on 9/17/16.
  */
-public class Match {
+public class Match extends Observable {
     private Player[] players;
     private List<Observer> observers;
     private Board board;
     private Player currentPlayer;
     private Date startTime, endTime;
     private boolean paused;
-    private EvaluationFunction rule;
-    private GameType gameType;
+    private SwapRule rule;
+    private PlayerMode gameType;
     private LearningMode learningMode; //gameType true if singleplayer, false if multiplayer
     public History history;
     private short nTurn,sideLength;
 
-    public Match(GameType gameType, boolean firstPlayer, EvaluationFunction rule, LearningMode learningMode, int sideLenght, BoardPanel gamePanel){
+    public Match(PlayerMode gameType, boolean firstPlayer, SwapRule rule, LearningMode learningMode, int sideLenght){
         this.gameType = gameType;
         this.rule = rule;
         this.learningMode = learningMode;
         this.sideLength = (short) sideLenght;
         board = new Board(sideLenght);
-        observers = new ArrayList<Observer>();
-        gamePanel.match = this;
-        observers.add(gamePanel);
+
 
 
         history = new History();
         nTurn = 0;
         players = new Player[2];
-        if(gameType == GameType.HumanVsBot){
+        if(gameType == PlayerMode.HumanVsBot){
             players[0] = new Human(this, true);
             players[1] = new Bot(this, false);
         }else {
@@ -57,6 +53,8 @@ public class Match {
         }else {
             currentPlayer = players[1];
         }
+        observers = new ArrayList<>(1);
+        setChanged();
         notifyObservers();
     }
 
@@ -104,15 +102,15 @@ public class Match {
                 if(currentLine[0].equals("settings")){
                     System.out.print("Loading settings..");
                     if(currentLine[1].equals("false")){
-                        gameType = GameType.BotVsBot;
+                        gameType = PlayerMode.BotVsBot;
                     }else {
-                        gameType = GameType.HumanVsBot;
+                        gameType = PlayerMode.HumanVsBot;
                     }
 
                     if(currentLine[2].equals("false")){
-                        rule = EvaluationFunction.NEIN;
+                        rule = SwapRule.NEIN;
                     }else {
-                        rule = EvaluationFunction.EnergieFlow;
+                        rule = SwapRule.JA;
                     }
                     if(currentLine[3].equals("false")){
                         learningMode = LearningMode.NEIN;
