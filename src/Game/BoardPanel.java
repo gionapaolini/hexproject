@@ -2,6 +2,9 @@ package Game;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 
 /**
  * Created by PabloPSoto and Lukas on 28/09/2016.
@@ -10,12 +13,75 @@ import java.awt.*;
 public class BoardPanel extends JPanel implements Observer{
 
     Match match;
+    private int[] lastSelected;
 
     public BoardPanel(Match m){
         match = m;
         setSize(745,422);
+        addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (lastSelected!=null) {
+                    m.putStone(lastSelected[1],lastSelected[2]);
+                }
+            }
 
+            @Override
+            public void mousePressed(MouseEvent e) {
 
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+
+            }
+        });
+        addMouseMotionListener(new MouseMotionListener() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                if (match.getCurrentPlayer()==null)return;
+                int y = e.getY();
+                int x = e.getX();
+
+                int startX = 60;
+                int startY = 30;
+                NodeCell[][] grid = match.getBoard().getGrid();
+                outerloop:for(int i=0;i<grid.length;i++){
+                    for(int j=0;j<grid[0].length;j++){
+                        Polygon p = getPolygon(startX,startY);
+                        startX = startX + 20;
+                        startY = startY + 30;
+                        if (!p.contains(x,y)) continue;
+                        if(!(grid[i][j].getStatus()==0)){
+                            lastSelected=null;
+                            break outerloop;
+                        }else {
+                            lastSelected= new int[]{match.getCurrentPlayer().getplayerID(),i, j};
+                            repaint();
+                            break outerloop;
+                        }
+
+                    }
+                    startY=30;
+                    startX=60+((1+i)*(2*20));
+                }
+            }
+        });
     }
 
 
@@ -25,6 +91,9 @@ public class BoardPanel extends JPanel implements Observer{
     public void update(){
         repaint();
     }
+
+
+
     private Polygon getPolygon(int midX, int midY){
         int length = 20;
 
@@ -93,11 +162,22 @@ public class BoardPanel extends JPanel implements Observer{
             for(int j=0;j<grid[0].length;j++){
                 if(grid[i][j].getStatus()==0){
                     g.setColor(Color.lightGray);
+                    if (lastSelected!=null){
+                    if (lastSelected[1]==i&&lastSelected[2]==j) {
+                        if(lastSelected[0]==1){
+                            g.setColor(Color.blue);
+                        }else {
+                            g.setColor(Color.red);
+                        }
+                    }}
+
                 }else if(grid[i][j].getStatus()==1){
-                    g.setColor(Color.red);
-                }else {
                     g.setColor(Color.blue);
+                }else {
+                    g.setColor(Color.red);
                 }
+
+
                 g.fillPolygon(getPolygon(startX,startY));
                 g.setColor(Color.black);
                 g.drawPolygon(getPolygon(startX,startY));
