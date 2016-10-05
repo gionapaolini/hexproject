@@ -1,5 +1,7 @@
 package Game;
 
+import Graphics.GameType;
+
 import javax.swing.*;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -12,7 +14,7 @@ public class TestMatch {
     public static void main(String[] args) throws InterruptedException, IOException {
 
         BoardPanel gamePanel = new BoardPanel(null);
-        Match match = new Match(false,false,false,false,11, gamePanel);
+        Match match = new Match(GameType.HumanVsHuman,false,EvaluationFunction.NEIN,LearningMode.NEIN,11, gamePanel);
         JFrame frame = new JFrame("GameHex");
         frame.setSize(720,382);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

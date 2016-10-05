@@ -1,6 +1,8 @@
 package Graphics;
 
 import Game.BoardPanel;
+import Game.EvaluationFunction;
+import Game.LearningMode;
 import Game.Match;
 
 import javax.swing.*;
@@ -12,13 +14,15 @@ import java.awt.*;
 public class TestMainGui {
     public static void main(String[] args){
         BoardPanel gamePanel = new BoardPanel(null);
-        Match match = new Match(false,false,false,false,11, gamePanel);
-        JFrame frame = new JFrame("GameHex");
+        boolean FirstPlayer = false;
+        Match match = new Match(GameType.HumanVsHuman, (boolean)FirstPlayer,EvaluationFunction.NEIN, LearningMode.NEIN,11, gamePanel);
+        BoardPanel bp = new BoardPanel(match);
+        MainGui frame = new MainGui();
         frame.setSize(720,382);
+        frame.add(bp);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        MainGUI mainGUI = new MainGUI();
-        mainGUI.getGridPanel().add(gamePanel);
-        frame.add(mainGUI.getPanel1());
+
+
         frame.setVisible(true);
         while (true){
 

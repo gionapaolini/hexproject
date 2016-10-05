@@ -1,5 +1,7 @@
 package Game;
 
+import Graphics.GameType;
+
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.*;
@@ -9,7 +11,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-/**
+
+
+/** A Match is a game happening either between player vs player or player vs gametype
+ *
  * Created by giogio on 9/17/16.
  */
 public class Match {
@@ -18,11 +23,14 @@ public class Match {
     private Board board;
     private Player currentPlayer;
     private Date startTime, endTime;
-    private boolean paused, rule, gameType, learningMode; //gameType true if singleplayer, false if multiplayer
+    private boolean paused;
+    private EvaluationFunction rule;
+    private GameType gameType;
+    private LearningMode learningMode; //gameType true if singleplayer, false if multiplayer
     public History history;
     private short nTurn,sideLength;
 
-    public Match(boolean gameType, boolean firstPlayer, boolean rule, boolean learningMode, int sideLenght, BoardPanel gamePanel){
+    public Match(GameType gameType, boolean firstPlayer, EvaluationFunction rule, LearningMode learningMode, int sideLenght, BoardPanel gamePanel){
         this.gameType = gameType;
         this.rule = rule;
         this.learningMode = learningMode;
@@ -36,7 +44,7 @@ public class Match {
         history = new History();
         nTurn = 0;
         players = new Player[2];
-        if(gameType){
+        if(gameType == GameType.HumanVsBot){
             players[0] = new Human(this, true);
             players[1] = new Bot(this, false);
         }else {
@@ -96,20 +104,20 @@ public class Match {
                 if(currentLine[0].equals("settings")){
                     System.out.print("Loading settings..");
                     if(currentLine[1].equals("false")){
-                        gameType = false;
+                        gameType = GameType.BotVsBot;
                     }else {
-                        gameType = true;
+                        gameType = GameType.HumanVsBot;
                     }
 
                     if(currentLine[2].equals("false")){
-                        rule = false;
+                        rule = EvaluationFunction.NEIN;
                     }else {
-                        rule = true;
+                        rule = EvaluationFunction.EnergieFlow;
                     }
                     if(currentLine[3].equals("false")){
-                        learningMode = false;
+                        learningMode = LearningMode.NEIN;
                     }else {
-                        learningMode = true;
+                        learningMode = LearningMode.JA;
                     }
                     System.out.println("... Done");
                 }else {
