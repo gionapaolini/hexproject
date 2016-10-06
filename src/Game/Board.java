@@ -1,5 +1,7 @@
 package Game;
 
+import Game.Enums.ColorMode;
+
 /**
  * Created by giogio on 9/17/16.
  */
@@ -42,8 +44,8 @@ public class Board {
         }
     }
 
-    public boolean isConnected(boolean player){
-        if(player){
+    public boolean isConnected(ColorMode colorMode){
+        if(colorMode==ColorMode.Blue){
             //Check if one of the cell in the first row is connected to one of the last
             for(int i=0;i<grid[0].length;i++){
                 for(int j=0;j<grid[0].length;j++){
@@ -55,7 +57,7 @@ public class Board {
                 }
             }
             return false;
-        }else {
+        }else{
             //Check if one of the cell in the first column is connected to one of the last
             for(int i=0;i<grid.length;i++){
                 for(int j=0;j<grid.length;j++){
@@ -83,7 +85,7 @@ public class Board {
         System.out.println();
 
         for(int i=0;i<grid.length;i++){
-            System.out.print("|");
+            System.out.print("|p");
             for(int j=0;j<grid.length;j++){
                 if(grid[i][j].getStatus()==0){
                     System.out.print(" X");
@@ -102,7 +104,7 @@ public class Board {
         return grid;
     }
 
-   public void placeStone(int x, int y, int value){
-       grid[x][y].setStatus((byte) value);
+   public void placeStone(int x, int y, ColorMode colorMode){
+       grid[x][y].setStatus(colorMode);
    }
 }

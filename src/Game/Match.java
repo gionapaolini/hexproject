@@ -1,5 +1,7 @@
 package Game;
 
+import Game.Enums.*;
+
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.*;
@@ -20,11 +22,14 @@ public class Match {
     private Player currentPlayer;
     private int currentInt;
     private Date startTime, endTime;
-    private boolean paused, rule, gameType, learningMode; //gameType true if singleplayer, false if multiplayer
+    private GameType gameType;
+    private LearningMode learningMode;
+    private SwapRule rule;
+    private boolean paused;
     public History history;
     private short nTurn,sideLength;
 
-    public Match(boolean gameType, boolean firstPlayer, boolean rule, boolean learningMode, int sideLenght, BoardPanel gamePanel){
+    public Match(GameType gameType, FirstPlayer firstPlayer, SwapRule rule, LearningMode learningMode, int sideLenght, BoardPanel gamePanel){
         this.gameType = gameType;
         this.rule = rule;
         this.learningMode = learningMode;
@@ -38,26 +43,24 @@ public class Match {
         history = new History();
         nTurn = 0;
         players = new Player[2];
-        if(gameType){
-            players[0] = new Human(this, true);
-            players[1] = new Bot(this, false);
+        if(gameType==gameType.Singleplayer){
+            if(firstPlayer== FirstPlayer.Yes) {
+                players[0] = new Human(this);
+                players[1] = new Bot(this);
+                players[0].setColor(ColorMode.Blue);
+                players[1].setColor(ColorMode.Red);
+            }else {
+                players[1] = new Human(this);
+                players[0] = new Bot(this);
+                players[0].setColor(ColorMode.Blue);
+                players[1].setColor(ColorMode.Red);
+            }
         }else {
-            players[0] = new Human(this, true);
-            players[1] = new Human(this, false);
+            players[0] = new Human(this);
+            players[1] = new Human(this);
+            players[0].setColor(ColorMode.Blue);
+            players[1].setColor(ColorMode.Red);
         }
-
-        if(firstPlayer){
-            players[0].color=true;
-            players[1].color=false;
-            currentPlayer = players[0];
-            currentInt = 0;
-        }else {
-            players[0].color=false;
-            players[1].color=true;
-            currentPlayer = players[1];
-            currentInt = 1;
-        }
-        currentPlayer = players[0];
         notifyObservers();
     }
 
@@ -104,33 +107,32 @@ public class Match {
                 String[] currentLine = line.split(" ");
                 if(currentLine[0].equals("settings")){
                     System.out.print("Loading settings..");
-                    if(currentLine[1].equals("false")){
-                        gameType = false;
+                    if(currentLine[1].equals("Singleplayer")){
+                        gameType = GameType.Singleplayer;
                     }else {
-                        gameType = true;
+                        gameType = GameType.Multiplayer;
                     }
 
-                    if(currentLine[2].equals("false")){
-                        rule = false;
+                    if(currentLine[2].equals("Active")){
+                        rule = SwapRule.Active;
                     }else {
-                        rule = true;
+                        rule = SwapRule.NotActive;
                     }
-                    if(currentLine[3].equals("false")){
-                        learningMode = false;
+                    if(currentLine[3].equals("Active")){
+                        learningMode = LearningMode.Active;
                     }else {
-                        learningMode = true;
+                        learningMode = LearningMode.NotActive;
                     }
-                    System.out.println("... Done");
                 }else {
-                    System.out.print("Loading a record..");
-                    boolean player, status;
+                    boolean status;
+                    ColorMode player;
                     byte row, column;
                     Date date;
                     try {
-                        if(currentLine[1].equals("false")){
-                            player = false;
+                        if(currentLine[1].equals("Blue")){
+                            player = ColorMode.Blue;
                         }else {
-                            player = true;
+                            player = ColorMode.Red;
                         }
                         row = (byte)Integer.parseInt(currentLine[2]);
                         column = (byte)Integer.parseInt(currentLine[3]);
@@ -147,7 +149,6 @@ public class Match {
                         e.printStackTrace();
                     }
 
-                    System.out.println("... Done");
 
                 }
 
@@ -176,7 +177,6 @@ public class Match {
         if(currentPlayer instanceof Bot){
             currentPlayer.makeMove();
         }
-        board.printGrid();
         notifyObservers();
 
     }
@@ -194,20 +194,21 @@ public class Match {
     }
 
 
-    public void switchPlayer(Player player){
-        currentPlayer = player;
+    public void switchPlayer(){
+        if(currentPlayer == players[0]){
+            currentPlayer=players[1];
+        }else {
+            currentPlayer=players[0];
+        }
         if(currentPlayer instanceof Bot){
             currentPlayer.makeMove();
         }
         notifyObservers();
     }
 
-    public void hasWon(boolean player){
-        if(board.isConnected(player)){
-            if(player)
-                System.out.println("Player 1 has won!");
-            else
-                System.out.println("Player 2 has won!");
+    public void hasWon(ColorMode colorMode){
+        if(board.isConnected(colorMode)){
+            System.out.println("Player "+colorMode+" has won!");
             endMatch();
         }
 
@@ -216,28 +217,20 @@ public class Match {
 
 
     public void putStone(int x, int y){
-        if(x>=board.getGrid().length || y>=board.getGrid().length || x<0 || y<0 || board.getGrid()[x][y].getStatus()!=0){
-            System.out.println("On the same cell, again!");
-            return;
-        }
-        if(currentPlayer.color){
-            board.getGrid()[x][y].setStatus((byte)1);
-            history.addRecord(new Record(true,(byte)x,(byte)y));
-            hasWon(true);
-            if(currentPlayer!=null) {
-                switchPlayer(players[1]);
+        if(!paused) {
+            if (x >= board.getGrid().length || y >= board.getGrid().length || x < 0 || y < 0 || board.getGrid()[x][y].getStatus() != 0) {
+                System.out.println("On the same cell, again!");
+                return;
             }
-            System.out.println("PUT RED");
-        }else{
-            board.getGrid()[x][y].setStatus((byte)2);
-            history.addRecord(new Record(false,(byte)x,(byte)y));
-            hasWon(false);
-            if(currentPlayer!=null) {
-                switchPlayer(players[0]);
+            board.placeStone(x, y, currentPlayer.color);
+            history.addRecord(new Record(currentPlayer.color, (byte) x, (byte) y));
+            hasWon(currentPlayer.color);
+            if (currentPlayer != null) {
+                switchPlayer();
             }
-            System.out.println("PUT RED");
+
+            notifyObservers();
         }
-        notifyObservers();
     }
 
     public void printGrid(){
@@ -249,26 +242,22 @@ public class Match {
     }
 
     public void undo(){
-        int count = 1;
-        while(count<=history.getList().size() && !history.getList().get(history.getList().size()-count).isStatus()){
-            count++;
+        if(!paused) {
+            int count = 1;
+            while (count <= history.getList().size() && !history.getList().get(history.getList().size() - count).isStatus()) {
+                count++;
+            }
+            if (!(count > history.getList().size()))
+                history.getList().get(history.getList().size() - count).setStatus(false);
+            loadBoard();
         }
-        if(!(count>history.getList().size()))
-            history.getList().get(history.getList().size()-count).setStatus(false);
-        loadBoard();
     }
 
     private void loadBoard(){
         board = new Board(sideLength);
         for(Record rec: history.getList()){
             if(rec.isStatus()){
-                byte stat;
-                if(rec.isPlayer()){
-                    stat = 1;
-                }else {
-                    stat = 2;
-                }
-                board.getGrid()[rec.getRow()][rec.getColumn()].setStatus(stat);
+                board.placeStone(rec.getRow(),rec.getColumn(),rec.getPlayer());
             }
         }
         if(currentPlayer!=null){
@@ -277,12 +266,8 @@ public class Match {
                 count++;
             }
             if(count>history.getList().size()){
-                if(history.getList().get(history.getList().size()-(count-1)).isPlayer()){
-                    currentPlayer = players[0];
-                }else {
-                    currentPlayer = players[1];
-                }
-            }else if(history.getList().get(history.getList().size()-count).isPlayer()){
+                currentPlayer = players[0];
+            }else if(history.getList().get(history.getList().size()-count).getPlayer()==ColorMode.Blue){
                 currentPlayer = players[1];
             }else{
                 currentPlayer = players[0];

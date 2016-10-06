@@ -1,5 +1,7 @@
 package Game;
 
+import Game.Enums.ColorMode;
+
 /**
  * Created by giogio on 9/17/16.
  */
@@ -102,8 +104,13 @@ public class NodeCell {
         return status;
     }
 
-    public void setStatus(byte status) {
-        this.status = status;
+    public void setStatus(ColorMode colorMode) {
+        if(colorMode==ColorMode.Blue){
+            this.status = (byte)1;
+        }else{
+            this.status = (byte)2;
+        }
+
     }
 
     public boolean isChecked() {

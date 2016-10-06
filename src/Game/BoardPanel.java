@@ -10,7 +10,7 @@ import java.awt.*;
 public class BoardPanel extends JPanel implements Observer{
 
     Match match;
-
+    private int[] lastSelected;
     public BoardPanel(Match m){
         match = m;
         this.setPreferredSize(new Dimension(720,385));
@@ -18,13 +18,22 @@ public class BoardPanel extends JPanel implements Observer{
         this.setBackground(new Color(0,0,0));
 
     }
+
+    public int[] getLastSelected() {
+        return lastSelected;
+    }
+
+    public void setLastSelected(int[] lastSelected) {
+        this.lastSelected = lastSelected;
+    }
+
     /*
-     *
-     */
+             *
+             */
     public void update(){
         repaint();
     }
-    private Polygon getPolygon(int midX, int midY){
+    public Polygon getPolygon(int midX, int midY){
         int length = 20;
 
         int[] x = new int[6];
@@ -92,10 +101,18 @@ public class BoardPanel extends JPanel implements Observer{
             for(int j=0;j<grid[0].length;j++){
                 if(grid[i][j].getStatus()==0){
                     g.setColor(Color.lightGray);
+                    if (lastSelected!=null){
+                        if (lastSelected[1]==i&&lastSelected[2]==j) {
+                            if(lastSelected[0]==1){
+                                g.setColor(Color.blue);
+                            }else {
+                                g.setColor(Color.red);
+                            }
+                        }}
                 }else if(grid[i][j].getStatus()==1){
-                    g.setColor(Color.red);
-                }else {
                     g.setColor(Color.blue);
+                }else {
+                    g.setColor(Color.red);
                 }
                 g.fillPolygon(getPolygon(startX,startY));
                 g.setColor(Color.black);

@@ -11,7 +11,6 @@ import java.awt.event.ActionListener;
 public class MainGui {
     private JPanel mainPanel;
     private JButton historyButton;
-    private JTextArea historyArea;
     private JButton pauseButton;
     private JPanel historyPanel;
     private JButton hideHistoryButton;
@@ -21,6 +20,8 @@ public class MainGui {
     private JButton menuButton;
     private JPanel gridPanel;
     private JLabel playerLabel;
+    private JTextPane historyArea;
+    private JPanel rightPanel;
     private JFrame frame;
 
     public MainGui(JPanel panel, JFrame frame){
@@ -68,7 +69,7 @@ public class MainGui {
         return historyButton;
     }
 
-    public JTextArea getHistoryArea() {
+    public JTextPane getHistoryArea() {
         return historyArea;
     }
 
@@ -98,5 +99,9 @@ public class MainGui {
 
     public JLabel getPlayerLabel() {
         return playerLabel;
+    }
+
+    public JPanel getRightPanel() {
+        return rightPanel;
     }
 }

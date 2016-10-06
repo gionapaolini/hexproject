@@ -1,5 +1,7 @@
 package Game;
 
+import Game.Enums.ColorMode;
+
 /**
  * Created by giogio on 9/17/16.
  */
@@ -8,8 +10,7 @@ public class Bot extends Player{
 
     }
 
-    public Bot(Match match, boolean color){
+    public Bot(Match match){
         this.match = match;
-        this.color = color;
     }
 }

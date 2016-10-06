@@ -1,14 +1,12 @@
 package Graphics;
 
-import Game.BoardPanel;
-import Game.Human;
-import Game.Match;
-import Game.Observer;
+import Game.*;
+import Game.Enums.*;
 
 import javax.swing.*;
+import javax.swing.text.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Scanner;
@@ -42,20 +40,40 @@ public class UserInteface implements Observer{
     public void update(){
 
         if(match.getCurrentPlayer()!=null) {
-            if (match.getCurrentPlayer().color) {
-                System.out.println("changed to blue");
-                main.getPlayerLabel().setText("<html>Player <font color='blue'>BLUE</font> is your turn!</html>");
-            }else{
-                System.out.println("changed to red");
-                main.getPlayerLabel().setText("<html>Player <font color='red'>RED</font> is your turn!</html>");
-            }
+
+            main.getPlayerLabel().setText("<html>Player <font color='"+match.getCurrentPlayer().color+"'>"+match.getCurrentPlayer().color+"</font> is your turn!</html>");
+
         }else {
-            System.out.println("NULL"+ match.getCurrentPlayer());
+            main.getPlayerLabel().setText("GAME ENDED!");
+
         }
-        System.out.println("here");
+        main.getHistoryArea().setText("");
+        for(Record rec: match.history.getList()){
+            int x = rec.getRow();
+            int y = rec.getColumn();
+            StyledDocument document = (StyledDocument) main.getHistoryArea().getDocument();
+            String s;
+            StyleContext sc = new StyleContext();
+            Style style = sc.addStyle("strikethru", null);
+            StyleConstants.setStrikeThrough (style,true);
+            s = rec.getPlayer() + ": (" + x + "," + y + ")\n";
+
+            try {
+                if(rec.isStatus())
+                    document.insertString (document.getLength(), s, null);
+                else
+                    document.insertString (document.getLength(), s, style);
+            }catch (BadLocationException e){
+                System.out.println("Error: "+e);
+            }
+
+        }
         frame.repaint();
 
     }
+
+
+
 
 
     public void setSettings(){
@@ -82,23 +100,26 @@ public class UserInteface implements Observer{
         settings.getPlaybutton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                boolean gameType, firstPlayer,rule, learningMode;
+                GameType gameType;
+                FirstPlayer firstPlayer;
+                SwapRule rule;
+                LearningMode learningMode;
                 if(settings.getPlayermode().equals("Singleplayer"))
-                    gameType = true;
+                    gameType = GameType.Singleplayer;
                 else
-                    gameType = false;
+                    gameType = GameType.Multiplayer;
                 if(settings.getFirstplayer().equals("Blue"))
-                    firstPlayer = true;
+                    firstPlayer = FirstPlayer.Yes;
                 else
-                    firstPlayer = false;
+                    firstPlayer = FirstPlayer.No;
                 if(settings.getSwaprule().isSelected())
-                    rule = true;
+                    rule = SwapRule.Active;
                 else
-                    rule = false;
+                    rule = SwapRule.NotActive;
                 if(settings.getLearningmode().isSelected())
-                    learningMode = true;
+                    learningMode = LearningMode.Active;
                 else
-                    learningMode = false;
+                    learningMode = LearningMode.NotActive;
 
 
 
@@ -142,42 +163,84 @@ public class UserInteface implements Observer{
         main.getPauseButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                if (match.getCurrentPlayer() != null) {
-                    int pl;
-                    if (getMatch().getCurrentPlayer().color) {
-                        pl = 1;
-                    } else {
-                        pl = 2;
-                    }
-                    System.out.print("Player " + pl + " make your move: ");
-                    Scanner in = new Scanner(System.in);
-                    String choice = in.next();
-                    int x, y;
-                    try {
-                        x = Integer.parseInt(choice);
-                        if (x >= 0 && x <= 10) {
-                            try {
-                                y = Integer.parseInt(in.next());
-                                if (y >= 0 && y <= 10) {
-                                    Human play = (Human) getMatch().getCurrentPlayer();
-                                    play.makeMove(x, y);
-                                } else {
-                                    System.out.println("Y coord not in the range, try again!");
-                                }
-                            } catch (NumberFormatException e) {
-                                System.out.println("Error, try again. 2");
+                System.out.println(main.getRightPanel().getSize());
+            }
+        });
+
+
+        panel.addMouseListener(new MouseListener() {
+
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (panel.getLastSelected()!=null) {
+                    match.putStone(panel.getLastSelected()[1],panel.getLastSelected()[2]);
+                }
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+
+            }
+        });
+
+        panel.addMouseMotionListener(new MouseMotionListener() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                if (match.getCurrentPlayer()==null)return;
+                int y = e.getY();
+                int x = e.getX();
+
+                int startX = 60;
+                int startY = 30;
+                NodeCell[][] grid = match.getBoard().getGrid();
+                outerloop:for(int i=0;i<grid.length;i++){
+                    for(int j=0;j<grid[0].length;j++){
+                        Polygon p = panel.getPolygon(startX,startY);
+                        startX = startX + 20;
+                        startY = startY + 30;
+                        if (!p.contains(x,y)) continue;
+                        if(!(grid[i][j].getStatus()==0)){
+                            panel.setLastSelected(null);
+                            break outerloop;
+                        }else {
+                            int pl;
+                            if(match.getCurrentPlayer().color==ColorMode.Blue){
+                                pl = 1;
+                            }else {
+                                pl = 0;
                             }
-
-                        } else {
-                            System.out.println("X coord not in the range, try again!");
+                            panel.setLastSelected(new int[]{pl,i, j});
+                            panel.repaint();
+                            break outerloop;
                         }
-                    } catch (NumberFormatException e) {
-                        System.out.println("Error, try again. 1");
-                    }
 
+                    }
+                    startY=30;
+                    startX=60+((1+i)*(2*20));
                 }
             }
         });
+
 
     }
 

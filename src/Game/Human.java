@@ -1,5 +1,8 @@
 package Game;
 
+import Game.Enums.ColorMode;
+import Game.Enums.GameType;
+
 /**
  * Created by giogio on 9/17/16.
  */
@@ -9,9 +12,8 @@ public class Human extends Player {
 
     }
 
-    public Human(Match match, boolean color){
+    public Human(Match match){
         this.match = match;
-        this.color = color;
     }
 
     public void makeMove(int x, int y){

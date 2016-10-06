@@ -1,10 +1,16 @@
 package Game;
 
+import Game.Enums.ColorMode;
+
 /**
  * Created by giogio on 9/17/16.
  */
 public abstract class Player {
-    public boolean color; //true is first player(blue), false is second player(red)
+    public ColorMode color;
     Match match;
     public abstract void makeMove();
+
+    public void setColor(ColorMode color){
+        this.color = color;
+    }
 }

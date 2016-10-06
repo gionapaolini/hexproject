@@ -1,5 +1,7 @@
 package Game;
 
+import Game.Enums.ColorMode;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -8,22 +10,23 @@ import java.util.Date;
  */
 public class Record {
 
-    private boolean player, status;
+    private boolean status;
+    private ColorMode player;
     private byte row, column;
     private Date time;
     private SimpleDateFormat format;
 
-    public Record(boolean player, byte row, byte column) {
+    public Record(ColorMode colorMode, byte row, byte column) {
         format=new SimpleDateFormat("HH:mm:ss");
-        this.player = player;
+        this.player = colorMode;
         this.row = row;
         this.column = column;
         time = new Date();
         status = true;
     }
-    public Record(boolean player, byte row, byte column, Date date, boolean status) {
+    public Record(ColorMode colorMode, byte row, byte column, Date date, boolean status) {
         format=new SimpleDateFormat("HH:mm:ss");
-        this.player = player;
+        this.player = colorMode;
         this.row = row;
         this.column = column;
         this.time = date;
@@ -38,20 +41,16 @@ public class Record {
         return player+" "+row+" "+column+" "+ format.format(time)+" "+status;
     }
     public void printRec(){
-        String pl, stat;
-        if(player)
-            pl=new String("Red");
-        else
-            pl=new String("Blue");
+        String stat;
         if(status){
             stat=new String("Active");
         }else {
             stat=new String("Undone");
         }
-        System.out.println("Player "+pl+" moved on "+row+", "+column+" - "+ format.format(time)+" |  Current Status: "+stat);
+        System.out.println("Player "+player+" moved on "+row+", "+column+" - "+ format.format(time)+" |  Current Status: "+stat);
     }
 
-    public boolean isPlayer() {
+    public ColorMode getPlayer() {
         return player;
     }
 
