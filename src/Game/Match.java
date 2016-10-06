@@ -27,6 +27,8 @@ public class Match extends Observable {
     private LearningMode learningMode; //gameType true if singleplayer, false if multiplayer
     public History history;
     private short nTurn,sideLength;
+    private boolean ended = false;
+    private int winningPlayer = 0;
 
     public Match(PlayerMode gameType, boolean firstPlayer, SwapRule rule, LearningMode learningMode, int sideLenght){
         this.gameType = gameType;
@@ -179,7 +181,11 @@ public class Match extends Observable {
     public void endMatch(){
         paused=true;
         currentPlayer = null;
+        ended = true;
+
         notifyObservers();
+        notifyObservers(this);
+
         System.out.println("ENDED");
     }
 
@@ -199,10 +205,12 @@ public class Match extends Observable {
 
     public void hasWon(boolean player){
         if(board.isConnected(player)){
-            if(player)
+            if(player){
                 System.out.println("Player 1 has won!");
-            else
+                winningPlayer=1;}
+            else{
                 System.out.println("Player 2 has won!");
+                winningPlayer=2;}
             endMatch();
         }
 
@@ -284,4 +292,11 @@ public class Match extends Observable {
 
     }
 
+    public boolean hasEnded() {
+        return ended;
+    }
+
+    public int getWinningPlayer() {
+        return winningPlayer;
+    }
 }
