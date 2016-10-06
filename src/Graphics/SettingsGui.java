@@ -15,6 +15,8 @@ public class SettingsGui {
     private JComboBox botdifficulty;
     private JCheckBox swaprule;
     private JLabel botlabel;
+    private JComboBox firstplayer;
+    private JLabel firstLabel;
 
     public SettingsGui(){
         playermode.addActionListener(new ActionListener(){
@@ -22,23 +24,27 @@ public class SettingsGui {
                 if(playermode.getSelectedItem().equals("Multiplayer")){
                     botdifficulty.setVisible(false);
                     botlabel.setVisible(false);
+                    firstLabel.setVisible(false);
+                    firstplayer.setVisible(false);
                 }else{
                     botdifficulty.setVisible(true);
                     botlabel.setVisible(true);
+                    firstLabel.setVisible(true);
+                    firstplayer.setVisible(true);
                 }
             }
           });
     }
 
-    public JPanel getPanel1() {
+    public JPanel getMainPanel() {
         return mainPanel;
     }
 
-    public JComboBox getComboBox1() {
+    public JComboBox getPlayermode() {
         return playermode;
     }
 
-    public JCheckBox getCheckBox1() {
+    public JCheckBox getLearningmode() {
         return learningmode;
     }
 
@@ -50,5 +56,11 @@ public class SettingsGui {
         return botdifficulty;
     }
 
+    public JCheckBox getSwaprule() {
+        return swaprule;
+    }
 
+    public JComboBox getFirstplayer() {
+        return firstplayer;
+    }
 }

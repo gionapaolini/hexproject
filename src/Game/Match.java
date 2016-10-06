@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Scanner;
 
 /**
  * Created by giogio on 9/17/16.
@@ -17,6 +18,7 @@ public class Match {
     private List<Observer> observers;
     private Board board;
     private Player currentPlayer;
+    private int currentInt;
     private Date startTime, endTime;
     private boolean paused, rule, gameType, learningMode; //gameType true if singleplayer, false if multiplayer
     public History history;
@@ -45,10 +47,17 @@ public class Match {
         }
 
         if(firstPlayer){
+            players[0].color=true;
+            players[1].color=false;
             currentPlayer = players[0];
+            currentInt = 0;
         }else {
+            players[0].color=false;
+            players[1].color=true;
             currentPlayer = players[1];
+            currentInt = 1;
         }
+        currentPlayer = players[0];
         notifyObservers();
     }
 
@@ -155,6 +164,7 @@ public class Match {
     }
 
     public void notifyObservers(){
+        System.out.println("Notified!");
         for(Observer obs: observers){
             obs.update();
         }
@@ -168,6 +178,7 @@ public class Match {
         }
         board.printGrid();
         notifyObservers();
+
     }
 
     public void endMatch(){
@@ -206,15 +217,17 @@ public class Match {
 
     public void putStone(int x, int y){
         if(x>=board.getGrid().length || y>=board.getGrid().length || x<0 || y<0 || board.getGrid()[x][y].getStatus()!=0){
+            System.out.println("On the same cell, again!");
             return;
         }
-        if(currentPlayer.color==true){
+        if(currentPlayer.color){
             board.getGrid()[x][y].setStatus((byte)1);
             history.addRecord(new Record(true,(byte)x,(byte)y));
             hasWon(true);
             if(currentPlayer!=null) {
                 switchPlayer(players[1]);
             }
+            System.out.println("PUT RED");
         }else{
             board.getGrid()[x][y].setStatus((byte)2);
             history.addRecord(new Record(false,(byte)x,(byte)y));
@@ -222,6 +235,7 @@ public class Match {
             if(currentPlayer!=null) {
                 switchPlayer(players[0]);
             }
+            System.out.println("PUT RED");
         }
         notifyObservers();
     }
@@ -277,5 +291,12 @@ public class Match {
         notifyObservers();
 
     }
+
+    public void addObserver(Observer obs){
+        observers.add(obs);
+        System.out.println("Observer added!");
+    }
+
+
 
 }

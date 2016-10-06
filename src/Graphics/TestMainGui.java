@@ -14,12 +14,13 @@ public class TestMainGui {
         BoardPanel gamePanel = new BoardPanel(null);
         Match match = new Match(false,false,false,false,11, gamePanel);
         JFrame frame = new JFrame("GameHex");
-        frame.setSize(720,382);
+        frame.setSize(1055,410);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        MainGUI mainGUI = new MainGUI();
-        mainGUI.getGridPanel().add(gamePanel);
-        frame.add(mainGUI.getPanel1());
+        MainGui mainGUI = new MainGui(gamePanel,frame);
+frame.setResizable(false);
+        frame.add(mainGUI.getMainPanel());
         frame.setVisible(true);
+        match.startMatch();
         while (true){
 
         }

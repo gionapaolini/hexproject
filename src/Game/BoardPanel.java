@@ -13,6 +13,9 @@ public class BoardPanel extends JPanel implements Observer{
 
     public BoardPanel(Match m){
         match = m;
+        this.setPreferredSize(new Dimension(720,385));
+        this.setMinimumSize(new Dimension(720,385));
+        this.setBackground(new Color(0,0,0));
 
     }
     /*
@@ -48,7 +51,7 @@ public class BoardPanel extends JPanel implements Observer{
         return new Polygon(x, y, 6);
     }
 
-    public void paint(Graphics g){
+    public void paintComponent(Graphics g){
 
         int startXT=0;
         int startYT=0;
