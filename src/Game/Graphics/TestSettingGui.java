@@ -1,4 +1,4 @@
-package Graphics;
+package Game.Graphics;
 
 import javax.swing.*;
 
@@ -9,13 +9,8 @@ public class TestSettingGui {
     public static void main(String[] args){
         JFrame frame = new JFrame();
         SettingsGui gui = new SettingsGui();
-        frame.add(gui.getPanel1());
-        frame.setSize(700,500);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setVisible(true);
-        while (true){
+        MainGui mainGui = new MainGui(gui);
 
-        }
 
     }
 }

@@ -105,4 +105,8 @@ public class Board {
    public void placeStone(int x, int y, int value){
        grid[x][y].setStatus((byte) value);
    }
+
+    //TODO Copy Board
+
+    //TODO Evaluate
 }

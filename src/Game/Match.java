@@ -8,35 +8,41 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Observable;
 
-/**
+
+/** A Match is a game happening either between player vs player or player vs gametype
+ *
  * Created by giogio on 9/17/16.
  */
-public class Match {
+public class Match extends Observable {
     private Player[] players;
     private List<Observer> observers;
     private Board board;
     private Player currentPlayer;
     private Date startTime, endTime;
-    private boolean paused, rule, gameType, learningMode; //gameType true if singleplayer, false if multiplayer
+    private boolean paused;
+    private SwapRule rule;
+    private PlayerMode gameType;
+    private LearningMode learningMode; //gameType true if singleplayer, false if multiplayer
     public History history;
     private short nTurn,sideLength;
+    private boolean ended = false;
+    private int winningPlayer = 0;
 
-    public Match(boolean gameType, boolean firstPlayer, boolean rule, boolean learningMode, int sideLenght, BoardPanel gamePanel){
+    public Match(PlayerMode gameType, boolean firstPlayer, SwapRule rule, LearningMode learningMode, int sideLenght){
         this.gameType = gameType;
         this.rule = rule;
         this.learningMode = learningMode;
         this.sideLength = (short) sideLenght;
         board = new Board(sideLenght);
-        observers = new ArrayList<Observer>();
-        gamePanel.match = this;
-        observers.add(gamePanel);
+
 
 
         history = new History();
         nTurn = 0;
         players = new Player[2];
-        if(gameType){
+        if(gameType == PlayerMode.HumanVsBot){
             players[0] = new Human(this, true);
             players[1] = new Bot(this, false);
         }else {
@@ -49,6 +55,8 @@ public class Match {
         }else {
             currentPlayer = players[1];
         }
+        observers = new ArrayList<>(1);
+        setChanged();
         notifyObservers();
     }
 
@@ -96,20 +104,20 @@ public class Match {
                 if(currentLine[0].equals("settings")){
                     System.out.print("Loading settings..");
                     if(currentLine[1].equals("false")){
-                        gameType = false;
+                        gameType = PlayerMode.BotVsBot;
                     }else {
-                        gameType = true;
+                        gameType = PlayerMode.HumanVsBot;
                     }
 
                     if(currentLine[2].equals("false")){
-                        rule = false;
+                        rule = SwapRule.NEIN;
                     }else {
-                        rule = true;
+                        rule = SwapRule.JA;
                     }
                     if(currentLine[3].equals("false")){
-                        learningMode = false;
+                        learningMode = LearningMode.NEIN;
                     }else {
-                        learningMode = true;
+                        learningMode = LearningMode.JA;
                     }
                     System.out.println("... Done");
                 }else {
@@ -173,7 +181,11 @@ public class Match {
     public void endMatch(){
         paused=true;
         currentPlayer = null;
+        ended = true;
+
         notifyObservers();
+        notifyObservers(this);
+
         System.out.println("ENDED");
     }
 
@@ -193,10 +205,12 @@ public class Match {
 
     public void hasWon(boolean player){
         if(board.isConnected(player)){
-            if(player)
+            if(player){
                 System.out.println("Player 1 has won!");
-            else
+                winningPlayer=1;}
+            else{
                 System.out.println("Player 2 has won!");
+                winningPlayer=2;}
             endMatch();
         }
 
@@ -278,4 +292,11 @@ public class Match {
 
     }
 
+    public boolean hasEnded() {
+        return ended;
+    }
+
+    public int getWinningPlayer() {
+        return winningPlayer;
+    }
 }
