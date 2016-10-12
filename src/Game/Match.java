@@ -28,6 +28,7 @@ public class Match {
     private boolean paused;
     public History history;
     private short nTurn,sideLength;
+    private FirstPlayer firstPlayer;
 
     public Match(GameType gameType, FirstPlayer firstPlayer, SwapRule rule, LearningMode learningMode, int sideLenght, BoardPanel gamePanel){
         this.gameType = gameType;
