@@ -218,7 +218,7 @@ public class Match {
 
     public void putStone(int x, int y){
         if(!paused) {
-            if (x >= board.getGrid().length || y >= board.getGrid().length || x < 0 || y < 0 || board.getGrid()[x][y].getStatus() != 0) {
+            if ((board.getGrid()[x][y].getStatus() != 0 && ((rule==SwapRule.NotActive)||(rule==SwapRule.Active && nTurn>1)))){
                 System.out.println("On the same cell, again!");
                 return;
             }
@@ -228,6 +228,7 @@ public class Match {
             if (currentPlayer != null) {
                 switchPlayer();
             }
+            nTurn++;
 
             notifyObservers();
         }
@@ -282,6 +283,11 @@ public class Match {
         System.out.println("Observer added!");
     }
 
+    public SwapRule getRule() {
+        return rule;
+    }
 
-
+    public short getnTurn() {
+        return nTurn;
+    }
 }

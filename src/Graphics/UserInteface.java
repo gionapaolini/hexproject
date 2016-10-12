@@ -82,7 +82,12 @@ public class UserInteface implements Observer{
         frame.add(settings.getMainPanel());
     }
     public void setMain(){
-        frame.setSize(new Dimension(1090,420));
+        if(main.getHistoryPanel().getSize().getWidth()==150){
+            frame.setSize(new Dimension(1215,420));
+        }else {
+            frame.setSize(new Dimension(1090,420));
+        }
+
         frame.remove(settings.getMainPanel());
         frame.add(main.getMainPanel());
     }
@@ -219,7 +224,7 @@ public class UserInteface implements Observer{
                         startX = startX + 20;
                         startY = startY + 30;
                         if (!p.contains(x,y)) continue;
-                        if(!(grid[i][j].getStatus()==0)){
+                        if((match.getBoard().getGrid()[i][j].getStatus() != 0 && ((match.getRule()==SwapRule.NotActive)||(match.getRule()==SwapRule.Active && match.getnTurn()>1)))){
                             panel.setLastSelected(null);
                             break outerloop;
                         }else {

@@ -22,6 +22,7 @@ public class MainGui {
     private JLabel playerLabel;
     private JTextPane historyArea;
     private JPanel rightPanel;
+    private JScrollPane scrollPanel;
     private JFrame frame;
 
     public MainGui(JPanel panel, JFrame frame){
@@ -29,6 +30,7 @@ public class MainGui {
         gridPanel.add(panel);
         this.frame = frame;
         System.out.println(mainPanel.getMaximumSize());
+        historyArea.setBounds(0,0,150,400);
         historyButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -36,6 +38,7 @@ public class MainGui {
                 historyPanel.setPreferredSize(new Dimension(150,(int)historyPanel.getMaximumSize().getHeight()));
                 hideHistoryButton.setVisible(true);
                 historyArea.setVisible(true);
+                scrollPanel.setVisible(true);
                 historyButton.setVisible(false);
                 frame.setSize(new Dimension(1215,420));
 
@@ -47,6 +50,7 @@ public class MainGui {
                 historyPanel.setMaximumSize(new Dimension(25,(int)historyPanel.getMaximumSize().getHeight()));
                 historyPanel.setPreferredSize(new Dimension(25,(int)historyPanel.getMaximumSize().getHeight()));
                 hideHistoryButton.setVisible(false);
+                scrollPanel.setVisible(false);
                 historyArea.setVisible(false);
                 historyButton.setVisible(true);
                 frame.setSize(new Dimension(1090,420));
@@ -103,5 +107,8 @@ public class MainGui {
 
     public JPanel getRightPanel() {
         return rightPanel;
+    }
+    public JPanel getHistoryPanel(){
+        return historyPanel;
     }
 }

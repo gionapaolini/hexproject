@@ -112,6 +112,9 @@ public class NodeCell {
         }
 
     }
+    public void setStatus(byte status) {
+            this.status = status;
+    }
 
     public boolean isChecked() {
         return checked;

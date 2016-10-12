@@ -7,8 +7,10 @@ import Game.Enums.ColorMode;
  */
 public class Board {
     private NodeCell[][] grid;
+    int side;
 
     Board(int n){
+        side = n;
         //---Initialize the board---
         grid=new NodeCell[n][n];
         for(int i=0;i<n;i++){
@@ -106,5 +108,15 @@ public class Board {
 
    public void placeStone(int x, int y, ColorMode colorMode){
        grid[x][y].setStatus(colorMode);
+   }
+
+   public Board getCopy(){
+       Board b = new Board(side);
+       for (int i = 0;i<b.getGrid().length;i++){
+           for (int j = 0;j<b.getGrid().length;j++){
+                b.getGrid()[i][j].setStatus(grid[i][j].getStatus());
+           }
+       }
+       return b;
    }
 }
