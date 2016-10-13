@@ -4,6 +4,7 @@ import Game.Board;
 import Game.Enums.ColorMode;
 import Game.Enums.FirstPlayer;
 import Game.Match;
+import Game.Move;
 
 /**
  * Created by giogio on 10/9/16.
@@ -13,43 +14,81 @@ public class MCTS {
     Board board;
     NodeTree root;
     int nSimulation, lvlDepth, gridSize;
-    public MCTS(Board board, ColorMode colorMode, FirstPlayer player, int gridSize){
+    public MCTS(Board board, ColorMode colorMode, int gridSize){
         color = colorMode;
         this.board = board;
-        root = new NodeTree(null);
-        if(player == FirstPlayer.Yes){
-            root.setPlayer(colorMode.Blue);
-        }else {
-            root.setPlayer(ColorMode.Red);
-        }
         this.gridSize = gridSize;
     }
 
-    public void start(){
+
+    public void setnSimulation(int nSimulation) {
+        this.nSimulation = nSimulation;
+    }
+
+    public void setLvlDepth(int lvlDepth) {
+        this.lvlDepth = lvlDepth;
+    }
+
+    public NodeTree start(){
+        System.out.println("Begin");
+        root = new NodeTree(null);
+        root.setPlayer(color);
         expansion(root);
+
+        return getBestNextMove();
+
     }
 
 
-    public NodeTree selectionP1(NodeTree parentNode){
+    public NodeTree selection(NodeTree parentNode){
         if(parentNode.getChildren().size()==0)
             return parentNode;
         float best = 0;
         NodeTree bestNode = null;
+
         for(NodeTree node: parentNode.getChildren()){
             if(node.value>best) {
                 best = node.value;
                 bestNode = node;
             }
         }
-        return selectionP1(bestNode);
+        return selection(bestNode);
+    }
+
+    public NodeTree getBestNextMove(){
+        float best = 0;
+        NodeTree bestNode = null;
+        for(NodeTree node: root.getChildren()){
+            System.out.println(node.value);
+            if(node.value>best) {
+                best = node.value;
+                bestNode = node;
+            }
+        }
+        return bestNode;
     }
 
 
     public void expansion(NodeTree parentNode){
-        NodeTree newChild = new NodeTree(parentNode);
-        for(int i=0;i<nSimulation;i++){
+
+        if(parentNode.getDepth()==lvlDepth)
+            return;
+
+        for (int i = 0; i < nSimulation; i++) {
+            NodeTree newChild = new NodeTree(parentNode);
             simulation(newChild);
+            expansion(newChild);
         }
+        int visitsparent = 0;
+        int wins = 0;
+        for (NodeTree child : parentNode.getChildren()) {
+            visitsparent += child.n_visits;
+            wins += child.n_wins;
+        }
+        parentNode.n_wins = wins;
+        parentNode.n_visits = visitsparent;
+        parentNode.value = ((float) wins) / visitsparent;
+
 
     }
 
@@ -59,12 +98,14 @@ public class MCTS {
         boolean wrong;
         do{
             wrong = false;
-            x = (int)Math.random()*gridSize;
-            y = (int)Math.random()*gridSize;
+            x = (int)(Math.random()*gridSize);
+
+            y = (int)(Math.random()*gridSize);
             if(testBoard.getGrid()[x][y].getStatus()!=0){
                 wrong = true;
             }else {
                 for(NodeTree node: child.getParent().getChildren()){
+
                     if(x == node.x && y == node.y){
                         wrong = true;
                         break;
@@ -84,32 +125,29 @@ public class MCTS {
             currentPlayer = ColorMode.Blue;
         }
         while (!testBoard.isConnected(ColorMode.Blue) && !testBoard.isConnected(ColorMode.Red)){
-            do{
-                wrong = false;
-                x = (int)Math.random()*gridSize;
-                y = (int)Math.random()*gridSize;
-                if(testBoard.getGrid()[x][y].getStatus()!=0){
-                    wrong = true;
-                }
-            }while(wrong);
-            testBoard.placeStone(x,y,currentPlayer);
+
+            int random = (int)(Math.random()*testBoard.getListFreeCell().size());
+            Move move = board.getListFreeCell().remove(random);
+            testBoard.placeStone(move.x,move.y,currentPlayer);
             if(currentPlayer==ColorMode.Blue){
                 currentPlayer = ColorMode.Red;
             }else {
                 currentPlayer = ColorMode.Blue;
             }
         }
+
         child.n_visits++;
         if(testBoard.isConnected(color)){
             child.n_wins++;
         }
+        child.value = ((float)child.n_wins)/child.n_visits;
     }
 
     public Board buildBoard(NodeTree nodeTree){
         Board copyBoard = board.getCopy();
         NodeTree currentNode = nodeTree.getParent();
         while (currentNode.getParent()!=null){
-            copyBoard.placeStone(nodeTree.x,nodeTree.y,currentNode.getPlayer());
+            copyBoard.placeStone(currentNode.x,currentNode.y,currentNode.getPlayer());
             currentNode = currentNode.getParent();
         }
         return copyBoard;

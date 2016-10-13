@@ -291,4 +291,12 @@ public class Match {
     public short getnTurn() {
         return nTurn;
     }
+
+    public short getSideLength() {
+        return sideLength;
+    }
+
+    public FirstPlayer getFirstPlayer() {
+        return firstPlayer;
+    }
 }

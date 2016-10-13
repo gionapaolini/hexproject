@@ -109,11 +109,12 @@ public class UserInteface implements Observer{
                 FirstPlayer firstPlayer;
                 SwapRule rule;
                 LearningMode learningMode;
-                if(settings.getPlayermode().equals("Singleplayer"))
+                if(settings.getPlayermode().getSelectedItem().equals("Singleplayer"))
                     gameType = GameType.Singleplayer;
                 else
                     gameType = GameType.Multiplayer;
-                if(settings.getFirstplayer().equals("Blue"))
+
+                if(settings.getFirstplayer().getSelectedItem().equals("Blue"))
                     firstPlayer = FirstPlayer.Yes;
                 else
                     firstPlayer = FirstPlayer.No;

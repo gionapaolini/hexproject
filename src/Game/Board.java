@@ -2,6 +2,9 @@ package Game;
 
 import Game.Enums.ColorMode;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by giogio on 9/17/16.
  */
@@ -118,5 +121,17 @@ public class Board {
            }
        }
        return b;
+   }
+
+   public ArrayList<Move> getListFreeCell(){
+       ArrayList<Move> moves = new ArrayList<Move>();
+       for (int i = 0;i<grid.length;i++){
+           for (int j = 0;j<grid.length;j++){
+               if(grid[i][j].getStatus()==0){
+                   moves.add(new Move(i,j));
+               }
+           }
+       }
+       return moves;
    }
 }

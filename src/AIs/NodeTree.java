@@ -28,7 +28,19 @@ public class NodeTree {
                 player=ColorMode.Blue;
             }
         }
+        x=-1;
+        y=-1;
 
+    }
+
+    public int getDepth(){
+        NodeTree node = this;
+        int count = 0;
+        while (node.parent!=null){
+            count++;
+            node = node.parent;
+        }
+        return count;
     }
 
     public void setPlayer(ColorMode player) {
