@@ -38,15 +38,17 @@ public class UserInteface implements Observer{
         return match;
     }
     public void update(){
-
         if(match.getCurrentPlayer()!=null) {
 
             main.getPlayerLabel().setText("<html>Player <font color='"+match.getCurrentPlayer().color+"'>"+match.getCurrentPlayer().color+"</font> is your turn!</html>");
 
         }else {
-            main.getPlayerLabel().setText("GAME ENDED!");
+            ColorMode winner = getMatch().history.getList().get(getMatch().history.getList().size()-1).getPlayer();
+            main.getPlayerLabel().setText("<html> GAME ENDED! <br><font color='"+winner+"'>"+winner+"</font> has won!</html>");
 
         }
+
+        main.getTimeLabel().setText("Time: "+getMatch().getTime().toString());
         main.getHistoryArea().setText("");
         for(Record rec: match.history.getList()){
             int x = rec.getRow();
@@ -80,6 +82,7 @@ public class UserInteface implements Observer{
         frame.setSize(new Dimension(400,300));
         frame.remove(main.getMainPanel());
         frame.add(settings.getMainPanel());
+        frame.setTitle("Match Settings");
     }
     public void setMain(){
         if(main.getHistoryPanel().getSize().getWidth()==150){
@@ -90,6 +93,7 @@ public class UserInteface implements Observer{
 
         frame.remove(settings.getMainPanel());
         frame.add(main.getMainPanel());
+        frame.setTitle("Hex Game");
     }
 
     private void setActions(){
@@ -169,7 +173,9 @@ public class UserInteface implements Observer{
         main.getPauseButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                System.out.println(main.getRightPanel().getSize());
+
+               match.pause();
+
             }
         });
 

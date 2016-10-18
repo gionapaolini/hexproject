@@ -23,10 +23,10 @@ public class NodeCell {
     }
 
     public boolean isConnected(NodeCell second){
-        if(this.getStatus()==0)
-            return false;
-        else
+        if(this.getStatus()!=0 && this.getStatus()==second.getStatus())
             return isConnectedTo(second);
+        else
+           return false;
 
     }
 
@@ -42,6 +42,7 @@ public class NodeCell {
     }
 
     private boolean checkNode(NodeCell first, NodeCell second){
+
         if(first!=null && first.getStatus()==this.getStatus() && !first.isChecked()) {
             if (first == second) {
                 return true;

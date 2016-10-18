@@ -55,8 +55,9 @@ public class Board {
             for(int i=0;i<grid[0].length;i++){
                 for(int j=0;j<grid[0].length;j++){
                     uncheckGrid();
-                    if(grid[0][i].isConnected(grid[grid.length-1][j])){
+                    if(grid[0][i].getStatus()==1 && grid[0][i].isConnected(grid[grid.length-1][j])){
                         return true;
+
                     }
 
                 }
@@ -67,8 +68,7 @@ public class Board {
             for(int i=0;i<grid.length;i++){
                 for(int j=0;j<grid.length;j++){
                     uncheckGrid();
-                    if(grid[i][0].isConnected(grid[j][grid[0].length-1])){
-                        uncheckGrid();
+                    if(grid[i][0].getStatus()==2 && grid[i][0].isConnected(grid[j][grid[0].length-1])){
                         return true;
                     }
                 }

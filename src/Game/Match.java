@@ -4,6 +4,8 @@ import Game.Enums.*;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -29,16 +31,27 @@ public class Match {
     public History history;
     private short nTurn,sideLength;
     private FirstPlayer firstPlayer;
+    private TimeMatch time;
+    private Timer timer;
 
     public Match(GameType gameType, FirstPlayer firstPlayer, SwapRule rule, LearningMode learningMode, int sideLenght, BoardPanel gamePanel){
         this.gameType = gameType;
         this.rule = rule;
         this.learningMode = learningMode;
         this.sideLength = (short) sideLenght;
+        time = new TimeMatch();
         board = new Board(sideLenght);
         observers = new ArrayList<Observer>();
         gamePanel.match = this;
         observers.add(gamePanel);
+        timer = new Timer(1000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                time.increment();
+                notifyObservers();
+
+            }
+        });
 
 
         history = new History();
@@ -62,6 +75,7 @@ public class Match {
             players[0].setColor(ColorMode.Blue);
             players[1].setColor(ColorMode.Red);
         }
+
         notifyObservers();
     }
 
@@ -76,6 +90,7 @@ public class Match {
             }
             PrintWriter writer = new PrintWriter(file);
             writer.println("settings "+gameType+" "+rule+" "+learningMode);
+            writer.println("time "+time.h+" "+time.m+" "+time.s);
             for (Record record: history.getList()){
                 writer.println("rec "+record.toString());
             }
@@ -124,6 +139,11 @@ public class Match {
                     }else {
                         learningMode = LearningMode.NotActive;
                     }
+                }else if(currentLine[0].equals("time")) {
+                    time.h = (short) Integer.parseInt(currentLine[1]);
+                    time.m = (short) Integer.parseInt(currentLine[2]);
+                    time.s = (short) Integer.parseInt(currentLine[3]);
+
                 }else {
                     boolean status;
                     ColorMode player;
@@ -174,16 +194,19 @@ public class Match {
 
     public void startMatch(){
         paused = false;
+        timer.start();
         currentPlayer = players[0];
         if(currentPlayer instanceof Bot){
             currentPlayer.makeMove();
         }
+
         notifyObservers();
 
     }
 
     public void endMatch(){
         paused=true;
+        timer.stop();
         currentPlayer = null;
         notifyObservers();
         System.out.println("ENDED");
@@ -192,6 +215,10 @@ public class Match {
 
     public void pause(){
         paused = !paused;
+        if(paused)
+            timer.stop();
+        else
+            timer.start();
     }
 
 
@@ -298,5 +325,9 @@ public class Match {
 
     public FirstPlayer getFirstPlayer() {
         return firstPlayer;
+    }
+
+    public TimeMatch getTime() {
+        return time;
     }
 }

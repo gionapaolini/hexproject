@@ -23,6 +23,7 @@ public class MainGui {
     private JTextPane historyArea;
     private JPanel rightPanel;
     private JScrollPane scrollPanel;
+    private JLabel timeLabel;
     private JFrame frame;
 
     public MainGui(JPanel panel, JFrame frame){
@@ -110,5 +111,9 @@ public class MainGui {
     }
     public JPanel getHistoryPanel(){
         return historyPanel;
+    }
+
+    public JLabel getTimeLabel() {
+        return timeLabel;
     }
 }
