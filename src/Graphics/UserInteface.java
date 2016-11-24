@@ -1,5 +1,6 @@
 package Graphics;
 
+import AIs.AlphaBeta.EvaluationFunction;
 import Game.*;
 import Game.Enums.*;
 
@@ -145,7 +146,12 @@ public class UserInteface implements Observer{
         main.getUndoButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                match.undo();
+                if(match.getGameType()==GameType.Singleplayer) {
+                    match.undo();
+                    match.undo();
+                }else {
+                    match.undo();
+                }
             }
         });
         main.getSaveButton().addActionListener(new ActionListener() {
@@ -173,8 +179,10 @@ public class UserInteface implements Observer{
         main.getPauseButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-
+                System.out.println(EvaluationFunction.EvaluationFunction(match.getBoard().getGrid(),ColorMode.Blue));
+                /*
                match.pause();
+               */
 
             }
         });

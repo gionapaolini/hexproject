@@ -257,7 +257,7 @@ public class Match {
                 switchPlayer();
             }
             nTurn++;
-
+            System.out.println(x+" "+y);
             notifyObservers();
         }
     }
@@ -329,5 +329,9 @@ public class Match {
 
     public TimeMatch getTime() {
         return time;
+    }
+
+    public GameType getGameType() {
+        return gameType;
     }
 }

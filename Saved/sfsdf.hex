@@ -1,0 +1,15 @@
+settings Multiplayer NotActive NotActive
+time 0 0 31
+rec Blue 3 2 12:37:41 true
+rec Red 5 3 12:37:42 true
+rec Blue 4 3 12:37:42 false
+rec Red 3 4 12:37:43 false
+rec Blue 6 5 12:37:47 false
+rec Blue 8 4 12:37:56 true
+rec Red 6 5 12:37:56 true
+rec Blue 4 6 12:37:56 true
+rec Red 9 5 12:38:03 true
+rec Blue 7 7 12:38:03 true
+rec Red 3 8 12:38:11 true
+rec Blue 5 8 12:38:11 true
+rec Red 2 5 12:38:12 true

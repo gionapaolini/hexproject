@@ -117,6 +117,7 @@
         </constraints>
         <properties>
           <background color="-1"/>
+          <enabled value="false"/>
           <font size="20"/>
           <foreground color="-16777216"/>
           <visible value="true"/>
@@ -156,7 +157,12 @@
               <component id="e8bcc" class="javax.swing.JTextPane" binding="historyArea">
                 <constraints/>
                 <properties>
+                  <disabledTextColor color="-16777216"/>
                   <enabled value="false"/>
+                  <font size="14"/>
+                  <foreground color="-16777216"/>
+                  <inheritsPopupMenu value="false"/>
+                  <selectedTextColor color="-16777216"/>
                   <visible value="false"/>
                 </properties>
               </component>

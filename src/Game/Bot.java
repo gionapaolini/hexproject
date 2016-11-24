@@ -18,9 +18,8 @@ public class Bot extends Player{
     public Bot(Match match){
         this.match = match;
         mcts = new MCTS(match.getBoard(),color,match.getSideLength());
-        mcts.setnSimulation(10);
+        mcts.setnSimulation(3);
         mcts.setLvlDepth(3);
-        System.out.println("here");
 
     }
 }

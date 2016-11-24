@@ -69,14 +69,17 @@ public class BoardPanel extends JPanel implements Observer{
         t1x[0] = startXT+0; t1x[1] = startXT+480; t1x[2] = startXT+360;
         int[] t1y = new int[3];
         t1y[0] = startYT+0; t1y[1] = startYT+0; t1y[2] = startYT+180;
+
         int[] t2x = new int[3];
         t2x[0] = startXT+480; t2x[1] = startXT+720; t2x[2] = startXT+360;
         int[] t2y = new int[3];
         t2y[0] = startYT+0; t2y[1] = startYT+360; t2y[2] = startYT+180;
+
         int[] t3x = new int[3];
         t3x[0] = startXT+240; t3x[1] = startXT+720; t3x[2] = startXT+360;
         int[] t3y = new int[3];
         t3y[0] = startYT+360; t3y[1] = startYT+360; t3y[2] = startYT+180;
+
         int[] t4x = new int[3];
         t4x[0] = startXT+240; t4x[1] = startXT+0; t4x[2] = startXT+360;
         int[] t4y = new int[3];

@@ -56,10 +56,9 @@ public class MCTS {
     }
 
     public NodeTree getBestNextMove(){
-        float best = 0;
-        NodeTree bestNode = null;
+        float best = root.getChildren().get(0).value;
+        NodeTree bestNode = root.getChildren().get(0);
         for(NodeTree node: root.getChildren()){
-            System.out.println(node.value);
             if(node.value>best) {
                 best = node.value;
                 bestNode = node;
@@ -112,6 +111,7 @@ public class MCTS {
                     }
                 }
             }
+            System.out.println("In the 1st simulation Loop");
 
         }while(wrong);
 
@@ -127,13 +127,14 @@ public class MCTS {
         while (!testBoard.isConnected(ColorMode.Blue) && !testBoard.isConnected(ColorMode.Red)){
 
             int random = (int)(Math.random()*testBoard.getListFreeCell().size());
-            Move move = board.getListFreeCell().remove(random);
+            Move move = testBoard.getListFreeCell().get(random);
             testBoard.placeStone(move.x,move.y,currentPlayer);
             if(currentPlayer==ColorMode.Blue){
                 currentPlayer = ColorMode.Red;
             }else {
                 currentPlayer = ColorMode.Blue;
             }
+            System.out.println("In the 2st simulation Loop");
         }
 
         child.n_visits++;
@@ -141,6 +142,7 @@ public class MCTS {
             child.n_wins++;
         }
         child.value = ((float)child.n_wins)/child.n_visits;
+
     }
 
     public Board buildBoard(NodeTree nodeTree){
@@ -149,14 +151,10 @@ public class MCTS {
         while (currentNode.getParent()!=null){
             copyBoard.placeStone(currentNode.x,currentNode.y,currentNode.getPlayer());
             currentNode = currentNode.getParent();
+            System.out.println("In the buildboard Loop");
         }
         return copyBoard;
     }
-
-    public void backpropagation(){
-
-    }
-
 
 
 }

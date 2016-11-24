@@ -2,6 +2,8 @@ package Game;
 
 import Game.Enums.ColorMode;
 
+import java.awt.*;
+
 /**
  * Created by giogio on 9/17/16.
  */
@@ -117,11 +119,20 @@ public class NodeCell {
             this.status = status;
     }
 
+    public ColorMode getColor(){
+        if(status==1){
+            return ColorMode.Blue;
+        }else if(status==2){
+            return ColorMode.Red;
+        }
+        return null;
+    }
+
     public boolean isChecked() {
         return checked;
     }
 
-    private void setChecked(boolean checked) {
+    public void setChecked(boolean checked) {
         this.checked = checked;
     }
 }
