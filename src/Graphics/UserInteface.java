@@ -179,7 +179,7 @@ public class UserInteface implements Observer{
         main.getPauseButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                System.out.println(EvaluationFunction.EvaluationFunction(match.getBoard().getGrid(),ColorMode.Blue));
+                System.out.println(EvaluationFunction.uselessCount(match.getBoard()));
                 /*
                match.pause();
                */
@@ -194,6 +194,7 @@ public class UserInteface implements Observer{
             public void mouseClicked(MouseEvent e) {
                 if (panel.getLastSelected()!=null) {
                     match.putStone(panel.getLastSelected()[1],panel.getLastSelected()[2]);
+
                 }
             }
 
