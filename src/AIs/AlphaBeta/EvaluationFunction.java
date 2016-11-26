@@ -12,7 +12,7 @@ public class EvaluationFunction {
         int point = 0;
         for(int i=0;i<grid.length;i++){
             for(int j=0;j<grid.length;j++){
-                if(grid[i][j].getColor()==colorMode && grid[i][j].getColor()==ColorMode.Blue){
+                if(grid[i][j].getColor()==colorMode){
 
                     if(j!=10 && i==1 && grid[0][j].getColor()==null && grid[0][j+1].getColor()==null){
                         point++;
@@ -56,50 +56,50 @@ public class EvaluationFunction {
         return point;
     }
 
-    public static int uselessCount(Board testBoard){
+    public static int uselessCount(Board testBoard,ColorMode color){
         int count=0;
         for (int i=0;i<testBoard.getGrid().length;i++){
             for (int j=0;j<testBoard.getGrid().length;j++) {
-                if(testBoard.getGrid()[i][j].getColor()==ColorMode.Blue)
-                    if(useless(testBoard, i,j))
+                if(testBoard.getGrid()[i][j].getColor()==color)
+                    if(useless(testBoard, i,j,color))
                         count++;
             }
         }
         return count;
     }
 
-    public static boolean useless(Board testBoard, int h, int l){
+    public static boolean useless(Board testBoard, int x, int y, ColorMode color){
 
-        NodeTree child = new NodeTree(null);
-        child.x = h;
-        child.y = l;
         int count=0;
         int oppositeCol=0;
-
-        for(int i=child.y-1;i<child.y+1;i++){
-            for (int j=child.x-1;j<child.x+1;j++){
-                if((i==child.y-1 && j==child.x-1)||(i==child.y+1 && j==child.x+1)||(i==child.y && j==child.x))
+        for(int i=y-1;i<y+2;i++){
+            for (int j=x-1;j<x+2;j++){
+                if(i<0 || i>10 || j<0 || j>10 || (i==y-1 && j==x-1)||(i==y+1 && j==x+1)||(i==y && j==x)){
                     continue;
-                if(testBoard.getGrid()[j][i].getStatus()==0)
+                }
+
+                if(testBoard.getGrid()[j][i].getStatus()==0) {
                     count++;
-                else
-                    if(testBoard.getGrid()[j][i].getColor()!=ColorMode.Blue)
-                        oppositeCol++;
+                }else if(testBoard.getGrid()[j][i].getColor()!=color) {
+                    oppositeCol++;
+                }
             }
         }
+
+
         if (count==2 && oppositeCol==4){
             int[][] coords = {{-1,0},{-1,+1},{0,+1},{+1,0},{+1,-1},{0,-1},{-1,0}};
             boolean checks = false;
             for(int k = 0;k<7;k++){
-                int currentX = child.x+coords[k][0];
-                int currentY = child.y+coords[k][0];
+                int currentX = x+coords[k][0];
+                int currentY = y+coords[k][1];
                 if(checks==true){
-                    if(testBoard.getGrid()[currentX][k].getStatus()==0){
+                    if(testBoard.getGrid()[currentX][currentY].getStatus()==0){
                         return true;
                     }
                     return false;
                 }
-                if(testBoard.getGrid()[currentY][k].getStatus()==0){
+                if(testBoard.getGrid()[currentX][currentY].getStatus()==0){
                     checks=true;
                 }
 

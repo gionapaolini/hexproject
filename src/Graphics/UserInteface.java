@@ -179,7 +179,7 @@ public class UserInteface implements Observer{
         main.getPauseButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                System.out.println(EvaluationFunction.uselessCount(match.getBoard()));
+                System.out.println(EvaluationFunction.uselessCount(match.getBoard(), ColorMode.Blue));
                 /*
                match.pause();
                */

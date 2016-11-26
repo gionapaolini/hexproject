@@ -15,9 +15,12 @@ public class NodeCell {
 
     private boolean checked;
 
-    public NodeCell() {
+    private int x, y;
+    public NodeCell(int coordX, int coordY) {
         status=0;
         checked=false;
+        x = coordX;
+        y = coordY;
     }
 
     public void uncheck(){

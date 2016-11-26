@@ -5,6 +5,8 @@ import Game.Enums.ColorMode;
 import Game.Move;
 import Game.NodeCell;
 
+import java.util.ArrayList;
+
 /**
  * Created by giogio on 11/23/16.
  */
@@ -14,82 +16,57 @@ public class AlphaBetaTree {
     NodeTree root;
     public AlphaBetaTree(Board board, ColorMode colorMode){
         initialState=board;
-        colorMode=colorMode;
+        this.colorMode=colorMode;
     }
 
-    public NodeTree start(){
+    public Move start(){
         System.out.println("Begin");
         root = new NodeTree(null);
         root.setColor(colorMode);
         expansion(root);
-        return null;
+        NodeTree best = root.getChildren().get(0);
+        for(NodeTree node: root.getChildren()){
+            if(node.getValue()>best.getValue())
+                best=node;
+        }
+        return new Move(best.x,best.y);
 
 
     }
 
     public void expansion(NodeTree parentNode){
-
-        for(int i=0;i<60;i++){
-
+        double startTime = System.currentTimeMillis();
+        for(int i=0;i<initialState.getListFreeCell().size();i++){
             NodeTree newChild = new NodeTree(parentNode);
             simulation(newChild);
-            if(!useless(newChild)){
-                for (int j=0;j<60;j++){
+            Board testboard = buildBoard(newChild);
+
+            if(!EvaluationFunction.useless(testboard,newChild.x,newChild.y,newChild.getColor())){
+                for (int j=0;j<initialState.getListFreeCell().size()-1;j++){
+                    System.out.println("HereINSIDE");
                     NodeTree secondChild = new NodeTree(newChild);
                     simulation(secondChild);
                     evaluate(secondChild);
-                    if(secondChild.getValue()==0)
+                    if(secondChild.getValue()==0) {
+                        System.out.println("Valued0");
                         break;
+                    }
                     backpropagate(secondChild);
                     if(newChild.getValue()<newChild.getParent().getValue()){
+                        System.out.println("Pruned!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
                         break;
                     }
                 }
                 backpropagate(newChild);
             }
 
-
+            if(startTime-System.currentTimeMillis()>10000){
+                System.out.println("BREAKED");
+                break;
+            }
         }
     }
 
-
-    public boolean useless(NodeTree child){
-        Board testBoard = buildBoard(child);
-        testBoard.placeStone(child.x,child.y,child.getColor());
-        int count=0;
-
-        for(int i=child.y-1;i<child.y+2;i++){
-            for (int j=child.x-1;j<child.x+2;j++){
-                if((i==child.y-1 && j==child.x-1)||(i==child.y+1 && j==child.x+1)||(i==child.y && j==child.x))
-                    continue;
-                if(testBoard.getGrid()[j][i].getStatus()==0)
-                    count++;
-            }
-        }
-        if (count==2){
-            int[][] coords = {{-1,0},{-1,+1},{0,+1},{+1,0},{+1,-1},{0,-1},{-1,0}};
-            boolean checks = false;
-            for(int i = 0;i<7;i++){
-                int currentX = child.x+coords[i][0];
-                int currentY = child.y+coords[i][0];
-                if(checks==true){
-                    if(testBoard.getGrid()[currentX][currentY].getStatus()==0){
-                        return true;
-                    }
-                    return false;
-                }
-                if(testBoard.getGrid()[currentX][currentY].getStatus()==0){
-                    checks=true;
-                }
-
-            }
-
-
-        }
-        return false;
-
-
-    }
 
 
     public void backpropagate(NodeTree child){
@@ -107,6 +84,9 @@ public class AlphaBetaTree {
     public void simulation(NodeTree child){
         Board testBoard = buildBoard(child);
         int x,y;
+        ArrayList<Move> freeCells = testBoard.getListFreeCell();
+        Move move = getFreeMove(child,freeCells);
+        /*
         boolean wrong;
         do{
             wrong = false;
@@ -120,20 +100,44 @@ public class AlphaBetaTree {
                 }
             }
 
-            System.out.println("In the 1st simulation Loop");
             x = move.x;
             y = move.y;
 
         }while(wrong);
+        */
 
-        child.x = x;
-        child.y = y;
+        child.x = move.x;
+        child.y = move.y;
+    }
+
+    public Move getFreeMove(NodeTree node, ArrayList<Move> freeCells){
+        ArrayList<Move> neighbourMoves = new ArrayList<Move>();
+        ArrayList<Move> goodMoves = new ArrayList<Move>();
+        for (NodeTree neighbour: node.getParent().getChildren()){
+           if(neighbour!=node)
+               neighbourMoves.add(new Move(neighbour.x,neighbour.y));
+        }
+        for(Move move: freeCells){
+            boolean equal = false;
+            for(Move move1: neighbourMoves){
+                if (move.x == move1.x && move.y == move1.y){
+                    equal = true;
+                }
+            }
+            if(!equal)
+                goodMoves.add(move);
+
+        }
+        int random = (int)(Math.random()*goodMoves.size());
+
+        return goodMoves.get(random);
     }
 
     public void evaluate(NodeTree child){
         Board testBoard = buildBoard(child);
         testBoard.placeStone(child.x,child.y,child.getColor());
         child.setValue(EvaluationFunction.EvaluationFunction(testBoard.getGrid(),child.getColor()));
+
     }
 
     public Board buildBoard(NodeTree nodeTree){
@@ -142,14 +146,8 @@ public class AlphaBetaTree {
         while (currentNode.getParent()!=null){
             copyBoard.placeStone(currentNode.x,currentNode.y,currentNode.getColor());
             currentNode = currentNode.getParent();
-            System.out.println("In the buildboard Loop");
         }
         return copyBoard;
-    }
-
-
-    private void evaluateNode(){
-
     }
 
 

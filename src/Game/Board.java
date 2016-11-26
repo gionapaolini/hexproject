@@ -18,7 +18,7 @@ public class Board {
         grid=new NodeCell[n][n];
         for(int i=0;i<n;i++){
             for (int j=0;j<n;j++){
-                grid[i][j]=new NodeCell();
+                grid[i][j]=new NodeCell(i, j);
             }
         }
         //---Set the connections---
