@@ -16,7 +16,7 @@ public class PathFindingAlgorithm {
         StarNode start = new StarNode(null, startPoint);
         start.visitNode();
         starNodes.add(start);
-        
+
     }
 
 

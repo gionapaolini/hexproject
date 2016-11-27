@@ -1,5 +1,6 @@
 package Game;
 
+import AIs.AlphaBeta.ABPruning;
 import AIs.AlphaBeta.AlphaBetaTree;
 import AIs.MCTS;
 import AIs.NodeTree;
@@ -11,7 +12,7 @@ import Game.Enums.ColorMode;
 public class Bot extends Player{
 
     MCTS mcts;
-    AlphaBetaTree alpha;
+    ABPruning alpha;
     public void makeMove(){
        // NodeTree bestMove = mcts.start();
         Move bestMove = alpha.start();
@@ -20,7 +21,7 @@ public class Bot extends Player{
 
     public Bot(Match match){
         this.match = match;
-        alpha = new AlphaBetaTree(match.getBoard(),color);
+        alpha = new ABPruning(match.getBoard(),color);
         mcts = new MCTS(match.getBoard(),color,match.getSideLength());
         mcts.setnSimulation(3);
         mcts.setLvlDepth(3);
