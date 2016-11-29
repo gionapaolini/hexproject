@@ -1,6 +1,7 @@
 package Graphics;
 
 import AIs.AlphaBeta.EvaluationFunction;
+import AIs.PathFinding.PathFindingAlgorithm;
 import Game.*;
 import Game.Enums.*;
 
@@ -10,6 +11,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
@@ -179,7 +181,11 @@ public class UserInteface implements Observer{
         main.getPauseButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                System.out.println(EvaluationFunction.uselessCount(match.getBoard(), ColorMode.Blue));
+                PathFindingAlgorithm pathFindingAlgorithm = new PathFindingAlgorithm(match.getBoard().getGrid()[0][0], match.getBoard().getGrid()[10][10]);
+                ArrayList<Move> moves = pathFindingAlgorithm.start();
+                for (Move move: moves){
+                    match.getBoard().placeStone(move.x,move.y,ColorMode.Blue);
+                }
                 /*
                match.pause();
                */

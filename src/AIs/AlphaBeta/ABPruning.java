@@ -41,8 +41,10 @@ public class ABPruning {
     }
 
     public void expansion(NodeTree node){
-        if(node.getDepth()!=0)
+        if(node.getDepth()!=0) {
             simulation(node);
+            evaluate(node);
+        }
 
         if(System.currentTimeMillis()-startTime>maxTime){
             System.out.println("TimeLimit");
@@ -59,7 +61,6 @@ public class ABPruning {
             if(node.getDepth()>0)
                 backpropagate(node);
         }else{
-            evaluate(node);
             System.out.println("Child value: "+node.getValue());
             backpropagate(node);
         }

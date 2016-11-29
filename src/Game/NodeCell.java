@@ -3,6 +3,7 @@ package Game;
 import Game.Enums.ColorMode;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 /**
  * Created by giogio on 9/17/16.
@@ -58,6 +59,22 @@ public class NodeCell {
         return false;
     }
 
+    public ArrayList<NodeCell> getListFreeNeighbours(){
+        ArrayList<NodeCell> list = new ArrayList<NodeCell>();
+        if(upperL!=null && (upperL.status==0 || upperL.status==status))
+            list.add(upperL);
+        if(upperR!=null && (upperR.status==0 || upperR.status==status))
+            list.add(upperR);
+        if(right!=null && (right.status==0 || right.status==status))
+            list.add(right);
+        if(lowerR!=null && (lowerR.status==0 || lowerR.status==status))
+            list.add(lowerR);
+        if(lowerL!=null && (lowerL.status==0 || lowerL.status==status))
+            list.add(lowerL);
+        if(left!=null && (left.status==0 || left.status==status))
+            list.add(left);
+        return list;
+    }
     public NodeCell getUpperL() {
         return upperL;
     }
@@ -137,5 +154,21 @@ public class NodeCell {
 
     public void setChecked(boolean checked) {
         this.checked = checked;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public void setY(int y) {
+        this.y = y;
     }
 }
