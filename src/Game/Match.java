@@ -27,6 +27,7 @@ public class Match {
     private GameType gameType;
     private LearningMode learningMode;
     private SwapRule rule;
+    private BotType botType;
     private boolean paused;
     public History history;
     private short nTurn,sideLength;
@@ -34,11 +35,12 @@ public class Match {
     private TimeMatch time;
     private Timer timer;
 
-    public Match(GameType gameType, FirstPlayer firstPlayer, SwapRule rule, LearningMode learningMode, int sideLenght, BoardPanel gamePanel){
+    public Match(GameType gameType, FirstPlayer firstPlayer, SwapRule rule, LearningMode learningMode, BotType type, int sideLenght, BoardPanel gamePanel){
         this.gameType = gameType;
         this.rule = rule;
         this.learningMode = learningMode;
         this.sideLength = (short) sideLenght;
+        this.botType = type;
         time = new TimeMatch();
         board = new Board(sideLenght);
         observers = new ArrayList<Observer>();
@@ -60,12 +62,12 @@ public class Match {
         if(gameType==gameType.Singleplayer){
             if(firstPlayer== FirstPlayer.Yes) {
                 players[0] = new Human(this);
-                players[1] = new Bot(this);
+                players[1] = new Bot(this,botType);
                 players[0].setColor(ColorMode.Blue);
                 players[1].setColor(ColorMode.Red);
             }else {
                 players[1] = new Human(this);
-                players[0] = new Bot(this);
+                players[0] = new Bot(this, botType);
                 players[0].setColor(ColorMode.Blue);
                 players[1].setColor(ColorMode.Red);
             }

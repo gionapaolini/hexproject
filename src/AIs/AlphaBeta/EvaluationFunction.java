@@ -1,8 +1,11 @@
 package AIs.AlphaBeta;
 
+import AIs.PathFinding.PathFindingAlgorithm;
 import Game.Board;
 import Game.Enums.ColorMode;
 import Game.NodeCell;
+
+import java.util.ArrayList;
 
 /**
  * Created by giogio on 11/16/16.
@@ -108,9 +111,92 @@ public class EvaluationFunction {
 
         }
         return false;
+    }
 
 
+    public static ArrayList<ArrayList<NodeCell>> getGroups(NodeCell[][] grid, ColorMode colorMode){
+        ArrayList<ArrayList<NodeCell>> listOfList = new ArrayList<ArrayList<NodeCell>>();
+        for (int i=0;i<grid.length;i++){
+            for (int j=0;j<grid.length;j++){
+                if(grid[i][j].getColor() == colorMode && !isInGroups(grid[i][j],listOfList)){
+
+                        ArrayList<NodeCell> group = new ArrayList<NodeCell>();
+                        listOfList.add(group);
+                        group.add(grid[i][j]);
+                        System.out.println("Group created: "+i+","+j);
+                        if (grid[i][j].getListFriend(colorMode).size() == 0)
+                            break;
+                        checkfriends(grid[i][j], group);
+
+                }
+            }
+        }
+        return listOfList;
+    }
+
+    public static void checkfriends(NodeCell nodeCell, ArrayList<NodeCell> group){
+        for (NodeCell node: nodeCell.getListFriend(nodeCell.getColor())){
+            if(!isInGroup(node,group)){
+                group.add(node);
+                checkfriends(node, group);
+            }
+        }
+    }
+
+    public static boolean isInGroup(NodeCell nodeCell, ArrayList<NodeCell> group){
+        for (NodeCell node: group){
+            if(node == nodeCell) {
+                System.out.println("Happening");
+
+                return true;
+            }
+        }
+        return false;
+    }
+    public static boolean isInGroups(NodeCell nodeCell, ArrayList<ArrayList<NodeCell>> group){
+        for (ArrayList<NodeCell> list: group) {
+            if(isInGroup(nodeCell,list))
+                return true;
+        }
+        return false;
+    }
+
+    public static int getDistance(ArrayList<NodeCell> group1, ArrayList<NodeCell> group2){
+        int bestDistance = 1000;
+        for (NodeCell nodeCell: group1){
+            for (NodeCell nodeCell2: group2){
+                PathFindingAlgorithm algorithm = new PathFindingAlgorithm(nodeCell,nodeCell2,nodeCell.getColor());
+                int newDist = algorithm.start().size();
+                if(newDist<bestDistance)
+                    bestDistance = newDist;
+            }
+        }
+        return bestDistance;
+    }
+
+
+    public ArrayList<ArrayList<NodeCell>> getForwardConnection(ArrayList<ArrayList<NodeCell>> list){
+        if(list.get(0).get(0).getColor()==ColorMode.Red){
+            return redDirection(list);
+        }else {
+            return blueDirection(list);
+        }
+
+    }
+
+    public ArrayList<ArrayList<NodeCell>> redDirection(ArrayList<ArrayList<NodeCell>> list){
+        for (ArrayList<NodeCell> group1: list){
+            for (ArrayList<NodeCell> group2: list){
+                if(group1 == group2)
+                    continue;
+                
+            }
+        }
+    }
+
+    public ArrayList<ArrayList<NodeCell>> blueDirection(ArrayList<ArrayList<NodeCell>> list){
 
 
     }
+
 }

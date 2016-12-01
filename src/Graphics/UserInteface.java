@@ -116,6 +116,7 @@ public class UserInteface implements Observer{
                 FirstPlayer firstPlayer;
                 SwapRule rule;
                 LearningMode learningMode;
+                BotType botType;
                 if(settings.getPlayermode().getSelectedItem().equals("Singleplayer"))
                     gameType = GameType.Singleplayer;
                 else
@@ -133,10 +134,14 @@ public class UserInteface implements Observer{
                     learningMode = LearningMode.Active;
                 else
                     learningMode = LearningMode.NotActive;
+                if(settings.getBotdifficulty().getSelectedItem().equals("PathFinding"))
+                    botType = BotType.PathFinding;
+                else
+                    botType = BotType.AlphaBeta;
 
 
 
-                match = new Match(gameType,firstPlayer,rule,learningMode,11, panel);
+                match = new Match(gameType,firstPlayer,rule,learningMode, botType,11, panel);
                 match.addObserver(thisInteface);
                 match.startMatch();
                 setMain();
@@ -181,11 +186,7 @@ public class UserInteface implements Observer{
         main.getPauseButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                PathFindingAlgorithm pathFindingAlgorithm = new PathFindingAlgorithm(match.getBoard().getGrid()[0][0], match.getBoard().getGrid()[10][10]);
-                ArrayList<Move> moves = pathFindingAlgorithm.start();
-                for (Move move: moves){
-                    match.getBoard().placeStone(move.x,move.y,ColorMode.Blue);
-                }
+                System.out.println(EvaluationFunction.getGroups(match.getBoard().getGrid(),ColorMode.Blue).size());
                 /*
                match.pause();
                */

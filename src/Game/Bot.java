@@ -4,6 +4,8 @@ import AIs.AlphaBeta.ABPruning;
 import AIs.AlphaBeta.AlphaBetaTree;
 import AIs.MCTS;
 import AIs.NodeTree;
+import AIs.PathFinding.PathFindingBot;
+import Game.Enums.BotType;
 import Game.Enums.ColorMode;
 
 /**
@@ -13,15 +15,26 @@ public class Bot extends Player{
 
     MCTS mcts;
     ABPruning alpha;
-    public void makeMove(){
-       // NodeTree bestMove = mcts.start();
-        Move bestMove = alpha.start();
+    BotType botType;
+    PathFindingBot pathFindingBot;
+    public void makeMove() {
+        // NodeTree bestMove = mcts.start();
+        Move bestMove;
+        if (botType != BotType.PathFinding) {
+            bestMove = alpha.start();
+        }else {
+            pathFindingBot = new PathFindingBot(match,color);
+            bestMove = pathFindingBot.start();
+        }
         match.putStone(bestMove.x,bestMove.y);
+
     }
 
-    public Bot(Match match){
+    public Bot(Match match, BotType botType){
         this.match = match;
+        this.botType = botType;
         alpha = new ABPruning(match.getBoard(),color);
+
         mcts = new MCTS(match.getBoard(),color,match.getSideLength());
         mcts.setnSimulation(3);
         mcts.setLvlDepth(3);

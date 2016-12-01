@@ -59,20 +59,40 @@ public class NodeCell {
         return false;
     }
 
-    public ArrayList<NodeCell> getListFreeNeighbours(){
+    public ArrayList<NodeCell> getListFriend(ColorMode colorMode){
         ArrayList<NodeCell> list = new ArrayList<NodeCell>();
-        if(upperL!=null && (upperL.status==0 || upperL.status==status))
+        if(upperL!=null && upperL.getColor()==colorMode)
             list.add(upperL);
-        if(upperR!=null && (upperR.status==0 || upperR.status==status))
+        if(upperR!=null && upperR.getColor()==colorMode)
             list.add(upperR);
-        if(right!=null && (right.status==0 || right.status==status))
+        if(right!=null && right.getColor()==colorMode)
             list.add(right);
-        if(lowerR!=null && (lowerR.status==0 || lowerR.status==status))
+        if(lowerR!=null && lowerR.getColor()==colorMode)
             list.add(lowerR);
-        if(lowerL!=null && (lowerL.status==0 || lowerL.status==status))
+        if(lowerL!=null && lowerL.getColor()==colorMode)
             list.add(lowerL);
-        if(left!=null && (left.status==0 || left.status==status))
+        if(left!=null && left.getColor()==colorMode)
             list.add(left);
+
+        return list;
+    }
+
+
+    public ArrayList<NodeCell> getListFreeNeighbours(ColorMode colorMode){
+        ArrayList<NodeCell> list = new ArrayList<NodeCell>();
+        if(upperL!=null && (upperL.getColor()==null || upperL.getColor()==colorMode))
+            list.add(upperL);
+        if(upperR!=null && (upperR.getColor()==null || upperR.getColor()==colorMode))
+            list.add(upperR);
+        if(right!=null && (right.getColor()==null || right.getColor()==colorMode))
+            list.add(right);
+        if(lowerR!=null && (lowerR.getColor()==null || lowerR.getColor()==colorMode))
+            list.add(lowerR);
+        if(lowerL!=null && (lowerL.getColor()==null || lowerL.getColor()==colorMode))
+            list.add(lowerL);
+        if(left!=null && (left.getColor()==null || left.getColor()==colorMode))
+            list.add(left);
+
         return list;
     }
     public NodeCell getUpperL() {

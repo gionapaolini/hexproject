@@ -16,7 +16,7 @@ import java.awt.*;
 public class TestMainGui {
     public static void main(String[] args){
         BoardPanel gamePanel = new BoardPanel(null);
-        Match match = new Match(GameType.Singleplayer, FirstPlayer.Yes, SwapRule.NotActive, LearningMode.NotActive,11, gamePanel);
+        Match match = new Match(GameType.Singleplayer, FirstPlayer.Yes, SwapRule.NotActive, LearningMode.NotActive,null,11, gamePanel);
         JFrame frame = new JFrame("GameHex");
         frame.setSize(1055,410);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

@@ -19,7 +19,7 @@ public class ABPruning {
     public ABPruning(Board board, ColorMode colorMode){
         initialState=board;
         this.colorMode=colorMode;
-        depthLvl = 10;
+        depthLvl = 4;
         maxTime = 10000;
     }
 
@@ -71,13 +71,11 @@ public class ABPruning {
         if(child.getDepth()==0)
             return false;
         if(child.getColor()!=colorMode && child.getValue()<child.getParent().getValue()) {
-            //System.out.println("Pruned!! !! ! ! ! ! !  !! !dsdf dgdfb");
             return true;
 
         }
 
         if(child.getColor()==colorMode && child.getValue()>child.getParent().getValue()){
-           // System.out.println("Pruned!! !! ! ! ! ! !  !! !dsdf dgdfb");
             return true;
 
         }

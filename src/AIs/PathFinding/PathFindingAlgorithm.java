@@ -1,11 +1,12 @@
 package AIs.PathFinding;
 
+import Game.Enums.ColorMode;
 import Game.Move;
 import Game.NodeCell;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Scanner;
+
 
 /**
  * Created by giogio on 11/26/16.
@@ -14,12 +15,14 @@ public class PathFindingAlgorithm {
 
     HashMap<NodeCell,StarNode> cellMap = new HashMap<NodeCell,StarNode>();
     NodeCell startPoint, endPoint;
+    ColorMode colorMode;
 
-    public PathFindingAlgorithm(NodeCell startPoint, NodeCell endPoint){
+    public PathFindingAlgorithm(NodeCell startPoint, NodeCell endPoint, ColorMode colorMode){
         this.startPoint = startPoint;
         this.endPoint = endPoint;
         StarNode root = new StarNode(null, startPoint);
         cellMap.put(startPoint,root);
+        this.colorMode = colorMode;
     }
 
     public ArrayList<Move> start(){
@@ -30,10 +33,12 @@ public class PathFindingAlgorithm {
             exploreNeighbours(currentNode);
             currentNode = pickBestNode();
             currentNode.setVisited(true);
-            System.out.println("BestNode: ("+currentNode.getNode().getX()+", "+currentNode.getNode().getY()+")");
+
         }
-        System.out.println(currentNode.getNode().getX());
-        System.out.println(currentNode.getNode().getY());
+        if(currentNode.getNode()==null){
+            return null;
+        }
+
         return getPath(currentNode);
 
     }
@@ -41,6 +46,7 @@ public class PathFindingAlgorithm {
     public ArrayList<Move> getPath(StarNode end){
         ArrayList<Move> path = new ArrayList<Move>();
         while (end!=null) {
+
             Move move = new Move(end.getNode().getX(), end.getNode().getY());
             path.add(move);
             end = end.explorer;
@@ -78,12 +84,13 @@ public class PathFindingAlgorithm {
     }
     public void exploreNeighbours(StarNode node){
         NodeCell cell = node.getNode();
-        for (NodeCell nodeCell: cell.getListFreeNeighbours()){
+
+        for (NodeCell nodeCell: cell.getListFreeNeighbours(colorMode)){
             StarNode starNode = cellMap.get(nodeCell);
             if(starNode==null) {
                 createStarNode(nodeCell, node);
 
-            }else if(isBetterConnection(starNode, node)){
+            }else if(!starNode.isVisited() && isBetterConnection(starNode, node)){
                     starNode.setExplorer(node);
                     starNode.setG();
                     starNode.setF();
@@ -104,7 +111,6 @@ public class PathFindingAlgorithm {
             if(!starNode.isVisited() && ((starNode.f<best.f) || (starNode.f == best.f && starNode.h < best.h)))
                 best = starNode;
         }
-
         return best;
     }
 
