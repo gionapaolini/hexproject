@@ -8,7 +8,6 @@ import Game.Enums.SwapRule;
 import Game.Match;
 
 import javax.swing.*;
-import java.awt.*;
 
 /**
  * Created by PabloPSoto on 04/10/2016.
@@ -16,7 +15,7 @@ import java.awt.*;
 public class TestMainGui {
     public static void main(String[] args){
         BoardPanel gamePanel = new BoardPanel(null);
-        Match match = new Match(GameType.Singleplayer, FirstPlayer.Yes, SwapRule.NotActive, LearningMode.NotActive,null,11, gamePanel);
+        Match match = new Match(GameType.Singleplayer, FirstPlayer.Yes, SwapRule.NotActive, LearningMode.NotActive,null,11, gamePanel, null);
         JFrame frame = new JFrame("GameHex");
         frame.setSize(1055,410);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

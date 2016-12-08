@@ -1,9 +1,9 @@
 package Game;
 
+import AIs.GenEncoder.Phaenotype.SoundWorld.Sound;
 import Game.Enums.ColorMode;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by giogio on 9/17/16.
@@ -12,7 +12,7 @@ public class Board {
     private NodeCell[][] grid;
     int side;
 
-    Board(int n){
+    public Board(int n){
         side = n;
         //---Initialize the board---
         grid=new NodeCell[n][n];

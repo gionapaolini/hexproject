@@ -192,10 +192,11 @@ public class EvaluationFunction {
                 
             }
         }
+        return null;
     }
 
     public ArrayList<ArrayList<NodeCell>> blueDirection(ArrayList<ArrayList<NodeCell>> list){
-
+        return null;
 
     }
 

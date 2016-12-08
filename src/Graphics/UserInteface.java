@@ -141,8 +141,9 @@ public class UserInteface implements Observer{
 
 
 
-                match = new Match(gameType,firstPlayer,rule,learningMode, botType,11, panel);
+                match = new Match(gameType,firstPlayer,rule,learningMode, botType,11, panel, main.getAnalysisPanel());
                 match.addObserver(thisInteface);
+
                 match.startMatch();
                 setMain();
                 frame.repaint();
@@ -193,6 +194,13 @@ public class UserInteface implements Observer{
 
             }
         });
+        main.getAnalysisButton().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                main.getAnalysisPanel().setMatch(match);
+            }
+        });
+
 
 
         panel.addMouseListener(new MouseListener() {

@@ -12,7 +12,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Scanner;
 
 /**
  * Created by giogio on 9/17/16.
@@ -35,7 +34,7 @@ public class Match {
     private TimeMatch time;
     private Timer timer;
 
-    public Match(GameType gameType, FirstPlayer firstPlayer, SwapRule rule, LearningMode learningMode, BotType type, int sideLenght, BoardPanel gamePanel){
+    public Match(GameType gameType, FirstPlayer firstPlayer, SwapRule rule, LearningMode learningMode, BotType type, int sideLenght, BoardPanel gamePanel, AnalysisPanel analysisPanel){
         this.gameType = gameType;
         this.rule = rule;
         this.learningMode = learningMode;
@@ -55,7 +54,7 @@ public class Match {
             }
         });
 
-
+        analysisPanel.setBoard(board);
         history = new History();
         nTurn = 0;
         players = new Player[2];

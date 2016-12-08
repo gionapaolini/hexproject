@@ -1,5 +1,7 @@
 package Graphics;
 
+import Game.AnalysisPanel;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -26,9 +28,17 @@ public class MainGui {
     private JLabel timeLabel;
     private JFrame frame;
 
+   private JButton analysisButton;
+    private AnalysisPanel analysisPanel = new AnalysisPanel();
+    public JButton getAnalysisButton() {return analysisButton;}
+    public AnalysisPanel getAnalysisPanel() {return analysisPanel;}
+
     public MainGui(JPanel panel, JFrame frame){
+        analysisPanel.setEnabled(false);
+        frame.add(analysisPanel);
         gridPanel.setLayout(new BoxLayout(gridPanel, BoxLayout.PAGE_AXIS));
         gridPanel.add(panel);
+
         this.frame = frame;
         System.out.println(mainPanel.getMaximumSize());
         historyArea.setBounds(0,0,150,400);
@@ -41,7 +51,10 @@ public class MainGui {
                 historyArea.setVisible(true);
                 scrollPanel.setVisible(true);
                 historyButton.setVisible(false);
-                frame.setSize(new Dimension(1215,420));
+
+                Dimension d = frame.getSize();
+                d.setSize(d.getWidth()+historyPanel.getPreferredSize().getWidth(),d.getHeight());
+                frame.setSize(d);
 
             }
         });
@@ -54,17 +67,44 @@ public class MainGui {
                 scrollPanel.setVisible(false);
                 historyArea.setVisible(false);
                 historyButton.setVisible(true);
-                frame.setSize(new Dimension(1090,420));
+                Dimension d = frame.getSize();
+                d.setSize(d.getWidth()-historyPanel.getPreferredSize().getWidth(),d.getHeight());
+                frame.setSize(d);
 
             }
         });
+        analysisButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (analysisPanel.isEnabled() == false) {
+                    analysisPanel.setEnabled(true);
+                    analysisPanel.setPreferredSize(new Dimension(1090,200));
+
+
+
+
+                    analysisPanel.setVisible(true);
+                    Dimension d = frame.getSize();
+                    d.setSize(d.getWidth(),d.getHeight()+analysisPanel.getPreferredSize().getHeight());
+                    frame.setSize(d);
+                }else{
+                    analysisPanel.setVisible(false);
+                    analysisPanel.setEnabled(false);
+                    Dimension d = frame.getSize();
+                    d.setSize(d.getWidth(),d.getHeight()-analysisPanel.getPreferredSize().getHeight());
+                    frame.setSize(d);
+                   }
+            }
+        });
+
         undoButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 System.out.println(frame.getSize());
             }
         });
-    }
+
+        }
 
     public JPanel getMainPanel() {
         return mainPanel;
