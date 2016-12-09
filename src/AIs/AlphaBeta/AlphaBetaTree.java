@@ -136,7 +136,7 @@ public class AlphaBetaTree {
     public void evaluate(NodeTree child){
         Board testBoard = buildBoard(child);
         testBoard.placeStone(child.x,child.y,child.getColor());
-        child.setValue(EvaluationFunction.EvaluationFunction(testBoard.getGrid(),child.getColor()));
+        child.setValue(EvaluationFunction.get_n_bridges(testBoard.getGrid(),child.getColor()));
 
     }
 

@@ -94,7 +94,7 @@ public class ABPruning {
 
     public void evaluate(NodeTree child){
         Board testBoard = buildBoardWithStone(child);
-        child.setValue(EvaluationFunction.EvaluationFunction(testBoard.getGrid(),child.getColor()));
+        child.setValue(EvaluationFunction.get_n_bridges(testBoard.getGrid(),child.getColor()));
     }
 
     public void backpropagate(NodeTree child){

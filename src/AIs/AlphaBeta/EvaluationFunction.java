@@ -3,15 +3,19 @@ package AIs.AlphaBeta;
 import AIs.PathFinding.PathFindingAlgorithm;
 import Game.Board;
 import Game.Enums.ColorMode;
+import Game.Move;
 import Game.NodeCell;
 
+import javax.xml.soap.Node;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 /**
  * Created by giogio on 11/16/16.
  */
 public class EvaluationFunction {
-    public static int EvaluationFunction(NodeCell[][] grid, ColorMode colorMode){
+
+    public static int get_n_bridges(NodeCell[][] grid, ColorMode colorMode){
         int point = 0;
         for(int i=0;i<grid.length;i++){
             for(int j=0;j<grid.length;j++){
@@ -114,6 +118,120 @@ public class EvaluationFunction {
     }
 
 
+    public static NodeCell getBestBridge(NodeCell nodeCell, NodeCell[][] grid){
+        if(nodeCell.getColor()==ColorMode.Blue) {
+            int leftDistance = getLeftDistance(nodeCell,grid);
+            int rightDistance = getRightDistance(nodeCell,grid);
+            int best = 1000;
+            NodeCell bestCell = null;
+            for (NodeCell cell : nodeCell.getPossibleBridgesList()) {
+                int cellLeftDistance = getLeftDistance(cell,grid);
+                int cellRightDistance = getRightDistance(cell,grid);
+                if(leftDistance+cellRightDistance<best){
+                    bestCell = cell;
+                    best = leftDistance+cellRightDistance;
+                }
+                if(rightDistance+cellLeftDistance<best){
+                    bestCell = cell;
+                    best = rightDistance+cellLeftDistance;
+                }
+
+            }
+            return bestCell;
+        }else {
+            int topDistance = getTopDistance(nodeCell,grid);
+            int bottomDistance = getBottomDistance(nodeCell,grid);
+            int best = 1000;
+            NodeCell bestCell = null;
+            for (NodeCell cell : nodeCell.getPossibleBridgesList()) {
+
+                int cellTopDistance = getTopDistance(cell,grid);
+                int cellBottomDistance = getBottomDistance(cell,grid);
+                if(topDistance+cellBottomDistance<best){
+                    bestCell = cell;
+                    best = topDistance+cellBottomDistance;
+                }
+                if(bottomDistance+cellTopDistance<best){
+                    bestCell = cell;
+                    best = bottomDistance+cellTopDistance;
+                }
+
+            }
+            return bestCell;
+
+        }
+
+    }
+
+    public static int getLeftDistance(NodeCell nodeCell, NodeCell[][] grid){
+        int best = 100;
+        for (int i=0;i<grid.length;i++){
+
+
+            PathFindingAlgorithm pathFindingAlgorithm = new PathFindingAlgorithm(nodeCell,grid[0][i],ColorMode.Blue);
+            ArrayList<Move> path = pathFindingAlgorithm.start();
+            int dist;
+            if(path!=null)
+                dist = path.size();
+            else
+                dist = 100;
+            if(dist<best){
+                best = dist;
+            }
+        }
+        return best;
+    }
+    public static int getRightDistance(NodeCell nodeCell, NodeCell[][] grid){
+        int best = 100;
+        for (int i=0;i<grid.length;i++){
+            PathFindingAlgorithm pathFindingAlgorithm = new PathFindingAlgorithm(nodeCell,grid[10][i],ColorMode.Blue);
+            ArrayList<Move> path = pathFindingAlgorithm.start();
+            int dist;
+            if(path!=null)
+                dist = path.size();
+            else
+                dist = 100;
+            if(dist<best){
+                best = dist;
+            }
+        }
+        return best;
+    }
+    public static int getTopDistance(NodeCell nodeCell, NodeCell[][] grid){
+        int best = 100;
+        for (int i=0;i<grid.length;i++){
+
+            PathFindingAlgorithm pathFindingAlgorithm = new PathFindingAlgorithm(nodeCell,grid[i][0],ColorMode.Red);
+            ArrayList<Move> path = pathFindingAlgorithm.start();
+            int dist;
+            if(path!=null)
+                dist = path.size();
+            else
+                dist = 100;
+
+            if(dist<best){
+                best = dist;
+            }
+        }
+        return best;
+    }
+    public static int getBottomDistance(NodeCell nodeCell, NodeCell[][] grid){
+        int best = 100;
+        for (int i=0;i<grid.length;i++){
+            PathFindingAlgorithm pathFindingAlgorithm = new PathFindingAlgorithm(nodeCell,grid[i][10],ColorMode.Red);
+            ArrayList<Move> path = pathFindingAlgorithm.start();
+            int dist;
+            if(path!=null)
+                dist = path.size();
+            else
+                dist = 100;
+            if(dist<best){
+                best = dist;
+            }
+        }
+        return best;
+    }
+
     public static ArrayList<ArrayList<NodeCell>> getGroups(NodeCell[][] grid, ColorMode colorMode){
         ArrayList<ArrayList<NodeCell>> listOfList = new ArrayList<ArrayList<NodeCell>>();
         for (int i=0;i<grid.length;i++){
@@ -146,7 +264,6 @@ public class EvaluationFunction {
     public static boolean isInGroup(NodeCell nodeCell, ArrayList<NodeCell> group){
         for (NodeCell node: group){
             if(node == nodeCell) {
-                System.out.println("Happening");
 
                 return true;
             }
@@ -161,7 +278,7 @@ public class EvaluationFunction {
         return false;
     }
 
-    public static int getDistance(ArrayList<NodeCell> group1, ArrayList<NodeCell> group2){
+    public static int getDistanceGroupGroup(ArrayList<NodeCell> group1, ArrayList<NodeCell> group2){
         int bestDistance = 1000;
         for (NodeCell nodeCell: group1){
             for (NodeCell nodeCell2: group2){
@@ -171,6 +288,19 @@ public class EvaluationFunction {
                     bestDistance = newDist;
             }
         }
+        return bestDistance;
+    }
+
+    public static int getDistanceNodeGroup(NodeCell node, ArrayList<NodeCell> group2){
+        int bestDistance = 1000;
+
+        for (NodeCell nodeCell2: group2){
+            PathFindingAlgorithm algorithm = new PathFindingAlgorithm(node,nodeCell2,nodeCell2.getColor());
+            int newDist = algorithm.start().size();
+            if(newDist<bestDistance)
+                bestDistance = newDist;
+        }
+
         return bestDistance;
     }
 
@@ -189,14 +319,16 @@ public class EvaluationFunction {
             for (ArrayList<NodeCell> group2: list){
                 if(group1 == group2)
                     continue;
-                
+                //TO COMPLETE
             }
         }
+        return null;
+
     }
 
     public ArrayList<ArrayList<NodeCell>> blueDirection(ArrayList<ArrayList<NodeCell>> list){
-
-
+        //TO COMPLETE
+        return null;
     }
 
 }

@@ -188,7 +188,6 @@ public class Match {
     }
 
     public void notifyObservers(){
-        System.out.println("Notified!");
         for(Observer obs: observers){
             obs.update();
         }

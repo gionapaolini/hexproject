@@ -77,21 +77,50 @@ public class NodeCell {
         return list;
     }
 
-
-    public ArrayList<NodeCell> getListFreeNeighbours(ColorMode colorMode){
+    public ArrayList<NodeCell> getListFreeNeighbours(){
         ArrayList<NodeCell> list = new ArrayList<NodeCell>();
-        if(upperL!=null && (upperL.getColor()==null || upperL.getColor()==colorMode))
+        if(upperL!=null && upperL.getColor()==null)
             list.add(upperL);
-        if(upperR!=null && (upperR.getColor()==null || upperR.getColor()==colorMode))
+        if(upperR!=null && upperR.getColor()==null)
             list.add(upperR);
-        if(right!=null && (right.getColor()==null || right.getColor()==colorMode))
+        if(right!=null && right.getColor()==null)
             list.add(right);
-        if(lowerR!=null && (lowerR.getColor()==null || lowerR.getColor()==colorMode))
+        if(lowerR!=null && lowerR.getColor()==null)
             list.add(lowerR);
-        if(lowerL!=null && (lowerL.getColor()==null || lowerL.getColor()==colorMode))
+        if(lowerL!=null && lowerL.getColor()==null)
             list.add(lowerL);
-        if(left!=null && (left.getColor()==null || left.getColor()==colorMode))
+        if(left!=null && left.getColor()==null)
             list.add(left);
+
+        return list;
+    }
+
+
+    public ArrayList<NodeCell> getListGoodNeighbours(ColorMode colorMode){
+        ArrayList<NodeCell> list = new ArrayList<NodeCell>();
+        if(upperL!=null && (upperL.getColor()==null || upperL.getColor()==colorMode)) {
+            list.add(upperL);
+        }
+        if(upperR!=null && (upperR.getColor()==null || upperR.getColor()==colorMode)) {
+            list.add(upperR);
+        }
+        if(right!=null && (right.getColor()==null || right.getColor()==colorMode)) {
+
+            list.add(right);
+        }
+        if(lowerR!=null && (lowerR.getColor()==null || lowerR.getColor()==colorMode)) {
+
+            list.add(lowerR);
+        }
+        if(lowerL!=null && (lowerL.getColor()==null || lowerL.getColor()==colorMode)) {
+
+            list.add(lowerL);
+        }
+
+        if(left!=null && (left.getColor()==null || left.getColor()==colorMode)) {
+
+            list.add(left);
+        }
 
         return list;
     }
@@ -166,6 +195,39 @@ public class NodeCell {
             return ColorMode.Red;
         }
         return null;
+    }
+
+    public ArrayList<NodeCell> getPossibleBridgesList(){
+        ArrayList<NodeCell> bridges = new ArrayList<NodeCell>();
+        if(upperL!=null && upperR!=null && upperL.getStatus()==0 && upperR.getStatus()==0){
+            if(upperL.upperR!=null && upperL.upperR.getStatus()==0)
+                bridges.add(upperL.upperR);
+        }
+        if(right!=null && upperR!=null && right.getStatus()==0 && upperR.getStatus()==0){
+            if(upperR.right!=null && upperR.right.getStatus()==0)
+                bridges.add(upperR.right);
+        }
+        if(right!=null && lowerR!=null && right.getStatus()==0 && lowerR.getStatus()==0){
+            if(right.lowerR!=null && right.lowerR.getStatus()==0)
+                bridges.add(right.lowerR);
+        }
+
+        if(lowerL!=null && lowerR!=null && lowerL.getStatus()==0 && lowerR.getStatus()==0){
+            if(lowerR.lowerL!=null && lowerR.lowerL.getStatus()==0)
+                bridges.add(lowerR.lowerL);
+        }
+
+        if(lowerL!=null && left!=null && lowerL.getStatus()==0 && left.getStatus()==0){
+            if(lowerL.left!=null && lowerL.left.getStatus()==0)
+                bridges.add(lowerL.left);
+        }
+        if(upperL!=null && left!=null && upperL.getStatus()==0 && left.getStatus()==0){
+            if(upperL.left!=null && upperL.left.getStatus()==0)
+                bridges.add(upperL.left);
+        }
+
+
+        return bridges;
     }
 
     public boolean isChecked() {

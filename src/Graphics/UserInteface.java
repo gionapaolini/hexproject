@@ -1,6 +1,7 @@
 package Graphics;
 
 import AIs.AlphaBeta.EvaluationFunction;
+import AIs.MonteCarlo.MonteCarloTreeSearch;
 import AIs.PathFinding.PathFindingAlgorithm;
 import Game.*;
 import Game.Enums.*;
@@ -186,7 +187,9 @@ public class UserInteface implements Observer{
         main.getPauseButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                System.out.println(EvaluationFunction.getGroups(match.getBoard().getGrid(),ColorMode.Blue).size());
+                PathFindingAlgorithm p = new PathFindingAlgorithm(match.getBoard().getGrid()[1][1],match.getBoard().getGrid()[0][0],ColorMode.Blue);
+                System.out.println(p.start().size());
+
                 /*
                match.pause();
                */
