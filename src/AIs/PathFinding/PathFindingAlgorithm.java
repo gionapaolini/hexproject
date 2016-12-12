@@ -1,13 +1,16 @@
+
+
+
+
+
 package AIs.PathFinding;
 
 import Game.Enums.ColorMode;
 import Game.Move;
 import Game.NodeCell;
-import jdk.internal.org.objectweb.asm.tree.analysis.Value;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Scanner;
 
 
 /**
@@ -28,7 +31,6 @@ public class PathFindingAlgorithm {
     }
 
     public ArrayList<Move> start(){
-
         StarNode currentNode = cellMap.get(startPoint);
         evaluateNode(currentNode);
         currentNode.setVisited(true);
@@ -36,6 +38,7 @@ public class PathFindingAlgorithm {
             exploreNeighbours(currentNode);
             currentNode = pickBestNode();
             currentNode.setVisited(true);
+
         }
         if(currentNode.getNode()==null){
             return null;
@@ -47,16 +50,12 @@ public class PathFindingAlgorithm {
 
     public ArrayList<Move> getPath(StarNode end){
         ArrayList<Move> path = new ArrayList<Move>();
-
-        while (end.getExplorer()!=null) {
+        while (end!=null) {
 
             Move move = new Move(end.getNode().getX(), end.getNode().getY());
             path.add(move);
             end = end.explorer;
         }
-
-
-
         return path;
     }
 
@@ -89,19 +88,18 @@ public class PathFindingAlgorithm {
         node.setF();
     }
     public void exploreNeighbours(StarNode node){
-
         NodeCell cell = node.getNode();
+
         for (NodeCell nodeCell: cell.getListGoodNeighbours(colorMode)){
             StarNode starNode = cellMap.get(nodeCell);
             if(starNode==null) {
                 createStarNode(nodeCell, node);
 
             }else if(!starNode.isVisited() && isBetterConnection(starNode, node)){
-                    starNode.setExplorer(node);
-                    starNode.setG();
-                    starNode.setF();
+                starNode.setExplorer(node);
+                starNode.setG();
+                starNode.setF();
             }
-
         }
 
 
@@ -130,10 +128,8 @@ public class PathFindingAlgorithm {
 
     public void createStarNode(NodeCell cell, StarNode explorer){
         StarNode starNode = new StarNode(explorer,cell);
-
         cellMap.put(cell,starNode);
         evaluateNode(starNode);
-
 
     }
 

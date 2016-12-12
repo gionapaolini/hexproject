@@ -3,6 +3,7 @@ package AIs.AlphaBeta;
 import Game.Board;
 import Game.Enums.ColorMode;
 import Game.Move;
+import Game.NodeCell;
 
 import java.util.ArrayList;
 
@@ -19,7 +20,7 @@ public class ABPruning {
     public ABPruning(Board board, ColorMode colorMode){
         initialState=board;
         this.colorMode=colorMode;
-        depthLvl = 4;
+        depthLvl = 3;
         maxTime = 10000;
     }
 
@@ -94,7 +95,26 @@ public class ABPruning {
 
     public void evaluate(NodeTree child){
         Board testBoard = buildBoardWithStone(child);
-        child.setValue(EvaluationFunction.get_n_bridges(testBoard.getGrid(),child.getColor()));
+        float firstEval = EvaluationFunction.get_n_bridges(testBoard.getGrid(),child.getColor());
+        ArrayList<ArrayList<NodeCell>> groups = EvaluationFunction.getGroups(testBoard.getGrid(),child.getColor());
+        float best = 1;
+        for(ArrayList<NodeCell> group: groups){
+            if(group.size()>best)
+                best=group.size();
+        }
+
+        if(testBoard.getListColoredCell(child.getColor()).size()>10){
+            firstEval/=2;
+        }else {
+            best/=2;
+        }
+
+        float secondEval = EvaluationFunction.get_n_bridges(testBoard.getGrid(),child.getParent().getColor());
+        if(testBoard.getListColoredCell(child.getParent().getColor()).size()>10){
+            secondEval/=2;
+        }
+
+        child.setValue(firstEval+best-secondEval);
     }
 
     public void backpropagate(NodeTree child){

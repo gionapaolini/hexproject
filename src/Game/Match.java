@@ -71,9 +71,14 @@ public class Match {
                 players[0].setColor(ColorMode.Blue);
                 players[1].setColor(ColorMode.Red);
             }
-        }else {
+        }else if(gameType==gameType.Multiplayer){
             players[0] = new Human(this);
             players[1] = new Human(this);
+            players[0].setColor(ColorMode.Blue);
+            players[1].setColor(ColorMode.Red);
+        }else {
+            players[0] = new Bot(this,botType);
+            players[1] = new Bot(this,botType);
             players[0].setColor(ColorMode.Blue);
             players[1].setColor(ColorMode.Red);
         }
@@ -197,7 +202,10 @@ public class Match {
         paused = false;
         timer.start();
         currentPlayer = players[0];
+
+
         if(currentPlayer instanceof Bot){
+
             currentPlayer.makeMove();
         }
 
@@ -230,10 +238,13 @@ public class Match {
             currentPlayer=players[0];
         }
         if(currentPlayer instanceof Bot){
+            System.out.println("Making a move");
             currentPlayer.makeMove();
         }
         notifyObservers();
     }
+
+
 
     public void hasWon(ColorMode colorMode){
         if(board.isConnected(colorMode)){
@@ -254,12 +265,14 @@ public class Match {
             board.placeStone(x, y, currentPlayer.color);
             history.addRecord(new Record(currentPlayer.color, (byte) x, (byte) y));
             hasWon(currentPlayer.color);
-            if (currentPlayer != null) {
+            notifyObservers();
+            if (currentPlayer != null /*&& !(currentPlayer instanceof Bot)*/) {
                 switchPlayer();
             }
             nTurn++;
-            System.out.println(x+" "+y);
             notifyObservers();
+
+
         }
     }
 

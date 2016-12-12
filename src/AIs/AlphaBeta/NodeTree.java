@@ -11,7 +11,8 @@ import java.util.List;
 public class NodeTree {
     private NodeTree parent;
     private List<NodeTree> children;
-    public int value, x, y;
+    public int x, y;
+    public float value;
     private ColorMode color;
 
     public NodeTree(NodeTree parent){
@@ -34,7 +35,7 @@ public class NodeTree {
         children.add(child);
     }
 
-    public void setValue(int value) {
+    public void setValue(float value) {
         this.value = value;
     }
 
@@ -60,7 +61,7 @@ public class NodeTree {
         return count;
     }
 
-    public int getValue() {
+    public float getValue() {
         return value;
     }
 

@@ -143,10 +143,15 @@ public class EvaluationFunction {
             int bottomDistance = getBottomDistance(nodeCell,grid);
             int best = 1000;
             NodeCell bestCell = null;
-            for (NodeCell cell : nodeCell.getPossibleBridgesList()) {
+            System.out.println("Here");
+            System.out.println("x: "+nodeCell.getX());
+            System.out.println("y: "+nodeCell.getY());
 
+            for (NodeCell cell : nodeCell.getPossibleBridgesList()) {
+                System.out.println("Here2");
                 int cellTopDistance = getTopDistance(cell,grid);
                 int cellBottomDistance = getBottomDistance(cell,grid);
+                System.out.println(cellTopDistance+" || "+cellBottomDistance);
                 if(topDistance+cellBottomDistance<best){
                     bestCell = cell;
                     best = topDistance+cellBottomDistance;
@@ -157,6 +162,9 @@ public class EvaluationFunction {
                 }
 
             }
+            System.out.println("Here3");
+            Scanner scanner = new Scanner(System.in);
+            scanner.nextInt();
             return bestCell;
 
         }
@@ -241,7 +249,6 @@ public class EvaluationFunction {
                         ArrayList<NodeCell> group = new ArrayList<NodeCell>();
                         listOfList.add(group);
                         group.add(grid[i][j]);
-                        System.out.println("Group created: "+i+","+j);
                         if (grid[i][j].getListFriend(colorMode).size() == 0)
                             break;
                         checkfriends(grid[i][j], group);

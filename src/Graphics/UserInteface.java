@@ -98,6 +98,7 @@ public class UserInteface implements Observer{
         frame.remove(settings.getMainPanel());
         frame.add(main.getMainPanel());
         frame.setTitle("Hex Game");
+
     }
 
     private void setActions(){
@@ -120,8 +121,11 @@ public class UserInteface implements Observer{
                 BotType botType;
                 if(settings.getPlayermode().getSelectedItem().equals("Singleplayer"))
                     gameType = GameType.Singleplayer;
-                else
+                else if (settings.getPlayermode().getSelectedItem().equals("Multiplayer"))
                     gameType = GameType.Multiplayer;
+                else
+                    gameType = GameType.BotFight;
+
 
                 if(settings.getFirstplayer().getSelectedItem().equals("Blue"))
                     firstPlayer = FirstPlayer.Yes;
@@ -137,16 +141,21 @@ public class UserInteface implements Observer{
                     learningMode = LearningMode.NotActive;
                 if(settings.getBotdifficulty().getSelectedItem().equals("PathFinding"))
                     botType = BotType.PathFinding;
+                else if(settings.getBotdifficulty().getSelectedItem().equals("MCTS"))
+                    botType = BotType.MCTS;
                 else
                     botType = BotType.AlphaBeta;
 
 
 
+
                 match = new Match(gameType,firstPlayer,rule,learningMode, botType,11, panel);
                 match.addObserver(thisInteface);
-                match.startMatch();
+
                 setMain();
+                frame.revalidate();
                 frame.repaint();
+                match.startMatch();
 
             }
         });
@@ -187,8 +196,7 @@ public class UserInteface implements Observer{
         main.getPauseButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                PathFindingAlgorithm p = new PathFindingAlgorithm(match.getBoard().getGrid()[1][1],match.getBoard().getGrid()[0][0],ColorMode.Blue);
-                System.out.println(p.start().size());
+                 match.switchPlayer();
 
                 /*
                match.pause();
@@ -196,6 +204,8 @@ public class UserInteface implements Observer{
 
             }
         });
+
+
 
 
         panel.addMouseListener(new MouseListener() {

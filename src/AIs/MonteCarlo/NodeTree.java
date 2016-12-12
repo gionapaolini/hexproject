@@ -34,6 +34,16 @@ public class NodeTree {
 
     }
 
+    public int getDepth(){
+        NodeTree node = this;
+        int count = 0;
+        while (node.parent!=null){
+            count++;
+            node = node.parent;
+        }
+        return count;
+    }
+
     public void addChild(NodeTree child){
         childrens.add(child);
     }

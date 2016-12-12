@@ -14,27 +14,31 @@ import Game.Enums.ColorMode;
  */
 public class Bot extends Player{
 
-    MCTS mcts;
-    ABPruning alpha;
     BotType botType;
+    ABPruning alpha;
     PathFindingBot pathFindingBot;
+    MonteCarloTreeSearch monteCarloTreeSearch;
     public void makeMove() {
         Move bestMove;
-        if (botType != BotType.PathFinding) {
-            MonteCarloTreeSearch monteCarloTreeSearch = new MonteCarloTreeSearch(match.getBoard(),color);
+        if (botType == BotType.MCTS) {
+            monteCarloTreeSearch = new MonteCarloTreeSearch(match.getBoard(),color);
             bestMove = monteCarloTreeSearch.start();
-        }else {
+        }else if (botType == BotType.PathFinding) {
             pathFindingBot = new PathFindingBot(match,color);
             bestMove = pathFindingBot.start();
+        }else {
+            alpha = new ABPruning(match.getBoard(),color);
+            bestMove = alpha.start();
         }
+
         match.putStone(bestMove.x,bestMove.y);
 
     }
 
+
+
     public Bot(Match match, BotType botType){
         this.match = match;
         this.botType = botType;
-        alpha = new ABPruning(match.getBoard(),color);
-
     }
 }

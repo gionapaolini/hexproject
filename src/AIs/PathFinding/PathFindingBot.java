@@ -26,7 +26,7 @@ public class PathFindingBot {
 
     }
     public Move redPath(){
-        System.out.println("TEST");
+
         NodeCell[][] grid = match.getBoard().getGrid();
         ArrayList<Move> best = new ArrayList<Move>();
         int bestMovesSize = 10000;
@@ -72,31 +72,32 @@ public class PathFindingBot {
     }
 
     public Move bluePath(){
-        System.out.println("TEST");
+
         NodeCell[][] grid = match.getBoard().getGrid();
         ArrayList<Move> best = new ArrayList<Move>();
         int bestMovesSize = 10000;
         for (int i=0;i<grid.length;i++){
             for (int j=0;j<grid.length;j++){
-                if(grid[0][i].getColor()==null && grid[10][j].getColor()==null) {
-                    PathFindingAlgorithm path = new PathFindingAlgorithm(grid[0][i], grid[10][j], colorMode);
-                    ArrayList<Move> moves = path.start();
-                    if (moves != null && moves.size() < bestMovesSize) {
-                        bestMovesSize = moves.size();
-                        best = moves;
-                    }
+                PathFindingAlgorithm path = new PathFindingAlgorithm(grid[0][i],grid[10][j],colorMode);
+                ArrayList<Move> moves = path.start();
+                if(moves!=null && moves.size()<bestMovesSize){
+                    bestMovesSize=moves.size();
+                    best = moves;
                 }
 
             }
         }
         boolean firstToPut = true;
+
         for (int i=0;i<grid.length;i++){
             for (int j=0;j<grid.length;j++){
-                if(grid[i][j].getColor()!= null && grid[i][j].getColor()==colorMode){
+                if(grid[i][j].getColor()!=null && grid[i][j].getColor()==colorMode){
+
                     for (int k=0;k<grid.length;k++){
                         PathFindingAlgorithm path = new PathFindingAlgorithm(grid[i][j],grid[10][k],colorMode);
                         ArrayList<Move> moves = path.start();
-                        if(moves!=null && moves.size()<=bestMovesSize){
+                        if(moves!=null && moves.size()<bestMovesSize){
+
                             bestMovesSize=moves.size();
                             best = moves;
                             firstToPut = false;
@@ -107,9 +108,9 @@ public class PathFindingBot {
 
             }
         }
+
         if(!firstToPut)
             best.remove(best.size()-1);
-
         return best.get(best.size()-1);
 
 
@@ -118,3 +119,9 @@ public class PathFindingBot {
     }
 
 }
+
+
+
+
+
+

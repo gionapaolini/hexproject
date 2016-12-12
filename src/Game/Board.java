@@ -134,4 +134,16 @@ public class Board {
        }
        return moves;
    }
+
+    public ArrayList<Move> getListColoredCell(ColorMode colorMode){
+        ArrayList<Move> moves = new ArrayList<Move>();
+        for (int i = 0;i<grid.length;i++){
+            for (int j = 0;j<grid.length;j++){
+                if(grid[i][j].getColor()!=null && grid[i][j].getColor()==colorMode){
+                    moves.add(new Move(i,j));
+                }
+            }
+        }
+        return moves;
+    }
 }
