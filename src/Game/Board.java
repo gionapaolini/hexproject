@@ -12,7 +12,7 @@ public class Board {
     private NodeCell[][] grid;
     int side;
 
-    Board(int n){
+    protected Board(int n){
         side = n;
         //---Initialize the board---
         grid=new NodeCell[n][n];

@@ -1,30 +1,24 @@
 package AIs.MonteCarlo;
 
 import AIs.AlphaBeta.EvaluationFunction;
-import AIs.PathFinding.PathFindingAlgorithm;
-import AIs.PathFinding.PathFindingBot;
 import Game.Board;
 import Game.Enums.ColorMode;
-import Game.Match;
 import Game.Move;
 import Game.NodeCell;
 
 import java.util.ArrayList;
-import java.util.Random;
-import java.util.Scanner;
-import java.util.jar.Pack200;
 
 /**
  * Created by giogio on 12/1/16.
  */
-public class MonteCarloTreeSearch {
+public class MonteCarloTreeSearchAlt {
     int depthLvl, max_move_simulation;
     int maxTime;
     double startTime;
     Board initialBoard;
     ColorMode colorMode;
 
-    public MonteCarloTreeSearch(Board board, ColorMode colorMode){
+    public MonteCarloTreeSearchAlt(Board board, ColorMode colorMode){
         initialBoard = board;
         this.colorMode = colorMode;
         depthLvl = 5;

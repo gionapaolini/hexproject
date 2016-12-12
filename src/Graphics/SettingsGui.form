@@ -130,6 +130,7 @@
                     <item value="AlphaBeta"/>
                     <item value="PathFinding"/>
                     <item value="MCTS"/>
+                    <item value="MCTS_alt"/>
                   </model>
                 </properties>
               </component>

@@ -143,6 +143,8 @@ public class UserInteface implements Observer{
                     botType = BotType.PathFinding;
                 else if(settings.getBotdifficulty().getSelectedItem().equals("MCTS"))
                     botType = BotType.MCTS;
+                else if(settings.getBotdifficulty().getSelectedItem().equals("MCTS_alt"))
+                    botType = BotType.MCTS_alt;
                 else
                     botType = BotType.AlphaBeta;
 
