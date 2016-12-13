@@ -23,12 +23,13 @@ public class MonteCarloTreeSearch {
     double startTime;
     Board initialBoard;
     ColorMode colorMode;
+    private int simulationCount;
 
     public MonteCarloTreeSearch(Board board, ColorMode colorMode){
         initialBoard = board;
         this.colorMode = colorMode;
         depthLvl = 5;
-        maxTime = 10500;
+        maxTime = 1050;
         max_move_simulation = 60;
 
     }
@@ -38,7 +39,7 @@ public class MonteCarloTreeSearch {
     }
 
     public Move start(){
-
+        simulationCount = 0;
         NodeTree root = new NodeTree(null);
         if(colorMode ==ColorMode.Red)
             root.setColorMode(ColorMode.Blue);
@@ -59,6 +60,8 @@ public class MonteCarloTreeSearch {
         }
 
         printTree(root);
+
+        System.out.println("Simulations made for this turn:" + simulationCount);
         return bestNode.getMove();
 
 
@@ -122,6 +125,7 @@ public class MonteCarloTreeSearch {
         }
     }
     public void simulation(NodeTree node){
+        simulationCount++;
         Board copy = initialBoard.getCopy();
         NodeTree inBuild = node;
         while (inBuild.parent!=null){

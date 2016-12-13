@@ -3,6 +3,7 @@ package Game;
 import Game.Enums.ColorMode;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -11,7 +12,12 @@ import java.util.List;
 public class Board {
     private NodeCell[][] grid;
     int side;
+    ArrayList<Move> moves = new ArrayList<Move>();
+    ArrayList<Move> movesColorRed = new ArrayList<Move>();
+    ArrayList<Move> movesColorBlue = new ArrayList<Move>();
 
+    boolean flagFreeColor = true;
+    boolean flagColor = true;
     protected Board(int n){
         side = n;
         //---Initialize the board---
@@ -110,40 +116,64 @@ public class Board {
     }
 
    public void placeStone(int x, int y, ColorMode colorMode){
-       grid[x][y].setStatus(colorMode);
+       grid[x][y].setStatus(colorMode); flagColor=true; flagFreeColor=true;
    }
 
    public Board getCopy(){
        Board b = new Board(side);
+
+       /*ArrayList<Move> bluemoves= this.getListColoredCell(ColorMode.Blue); no appearent speedup
+       ArrayList<Move> redmoves= this.getListColoredCell(ColorMode.Red);
+       for (Move m : bluemoves){
+           b.getGrid()[m.x][m.y].setStatus(ColorMode.Blue);
+       }
+       for (Move m : redmoves){
+           b.getGrid()[m.x][m.y].setStatus(ColorMode.Red);
+       }*/
+      // /*
        for (int i = 0;i<b.getGrid().length;i++){
            for (int j = 0;j<b.getGrid().length;j++){
                 b.getGrid()[i][j].setStatus(grid[i][j].getStatus());
            }
        }
+      // */
        return b;
    }
 
-   public ArrayList<Move> getListFreeCell(){
-       ArrayList<Move> moves = new ArrayList<Move>();
-       for (int i = 0;i<grid.length;i++){
-           for (int j = 0;j<grid.length;j++){
-               if(grid[i][j].getStatus()==0){
-                   moves.add(new Move(i,j));
+   public ArrayList<Move> getListFreeCell() {
+       //flagFreeColor=true;
+       if (flagFreeColor){
+           moves.clear();
+           for (int i = 0; i < grid.length; i++) {
+               for (int j = 0; j < grid.length; j++) {
+                   if (grid[i][j].getStatus() == 0) {
+                       moves.add(new Move(i, j));
+                   }
                }
            }
-       }
+           flagFreeColor = false;
+        }
        return moves;
    }
 
     public ArrayList<Move> getListColoredCell(ColorMode colorMode){
-        ArrayList<Move> moves = new ArrayList<Move>();
-        for (int i = 0;i<grid.length;i++){
-            for (int j = 0;j<grid.length;j++){
-                if(grid[i][j].getColor()!=null && grid[i][j].getColor()==colorMode){
-                    moves.add(new Move(i,j));
+        //flagColor=true;
+        ArrayList<Move> moves;
+        if (colorMode == ColorMode.Blue) moves = movesColorBlue; else moves = movesColorRed;
+
+        if (flagColor) {
+            moves.clear();
+            for (int i = 0; i < grid.length; i++) {
+                for (int j = 0; j < grid.length; j++) {
+                    if (grid[i][j].getColor() != null && grid[i][j].getColor() == colorMode) {
+                        moves.add(new Move(i, j));
+                    }
                 }
             }
+            flagColor = false;
         }
+
+
         return moves;
     }
 }

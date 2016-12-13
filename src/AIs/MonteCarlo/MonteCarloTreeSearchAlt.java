@@ -17,6 +17,7 @@ public class MonteCarloTreeSearchAlt {
     double startTime;
     Board initialBoard;
     ColorMode colorMode;
+    private int simulationCount;
 
     public MonteCarloTreeSearchAlt(Board board, ColorMode colorMode){
         initialBoard = board;
@@ -32,7 +33,7 @@ public class MonteCarloTreeSearchAlt {
     }
 
     public Move start(){
-
+        simulationCount = 0;
         NodeTree root = new NodeTree(null);
         if(colorMode ==ColorMode.Red)
             root.setColorMode(ColorMode.Blue);
@@ -51,7 +52,7 @@ public class MonteCarloTreeSearchAlt {
                 bestVal = child.getValue();
             }
         }
-
+        System.out.println("Simulations made for this turn:" + simulationCount);
         printTree(root);
         return bestNode.getMove();
 
