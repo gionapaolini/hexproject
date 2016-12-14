@@ -16,6 +16,7 @@ public class NodeTree {
     NodeTree parent;
     ArrayList<NodeTree> childrens;
 
+
     public NodeTree(NodeTree parent){
         this.parent = parent;
         childrens = new ArrayList<NodeTree>();
@@ -87,4 +88,6 @@ public class NodeTree {
     public void setChildrens(ArrayList<NodeTree> childrens) {
         this.childrens = childrens;
     }
+
+
 }

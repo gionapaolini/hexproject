@@ -108,7 +108,7 @@ public class MonteCarloTreeSearch {
             copy.placeStone(inBuild.getMove().x,inBuild.getMove().y,inBuild.colorMode);
             inBuild = inBuild.getParent();
         }
-        ArrayList<Move> freeMoves = copy.getListFreeCell();
+        ArrayList<Move> freeMoves = (ArrayList<Move>) copy.getListFreeCell().clone();
         int countMoves = 0;
         while (freeMoves.size()>0 && countMoves<max_move_simulation){
             if(System.currentTimeMillis()-startTime<maxTime) {
@@ -204,7 +204,7 @@ public class MonteCarloTreeSearch {
             }
         }
 
-        ArrayList<Move> moves = board.getListColoredCell(ColorMode.Red);
+        ArrayList<Move> moves = (ArrayList<Move>) board.getListColoredCell(ColorMode.Red).clone();
         while (moves.size()<0){
             Move move = moves.remove((int)(Math.random()*moves.size()));
             NodeCell nodeCell = board.getGrid()[move.x][move.y];
@@ -358,7 +358,7 @@ public class MonteCarloTreeSearch {
             }
         }
 
-        ArrayList<Move> moves = board.getListColoredCell(ColorMode.Blue);
+        ArrayList<Move> moves = (ArrayList<Move>) board.getListColoredCell(ColorMode.Blue).clone();
         while (moves.size()<0){
             Move move = moves.remove((int)(Math.random()*moves.size()));
             NodeCell nodeCell = board.getGrid()[move.x][move.y];
