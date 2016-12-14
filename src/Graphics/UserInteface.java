@@ -1,8 +1,5 @@
 package Graphics;
 
-import AIs.AlphaBeta.EvaluationFunction;
-import AIs.MonteCarlo.MonteCarloTreeSearch;
-import AIs.PathFinding.PathFindingAlgorithm;
 import Game.*;
 import Game.Enums.*;
 
@@ -12,8 +9,6 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Scanner;
 
 /**
  * Created by giogio on 10/5/16.
@@ -28,7 +23,8 @@ public class UserInteface implements Observer{
     public UserInteface() {
         frame = new JFrame("Hex - Match Settings");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setResizable(false);
+        frame.setResizable(true);
+        //frame.setResizable(false);
         settings = new SettingsGui();
         panel = new BoardPanel(null);
         main = new MainGui(panel,frame);
@@ -36,6 +32,7 @@ public class UserInteface implements Observer{
         setActions();
         frame.setVisible(true);
         thisInteface = this;
+
 
     }
     public Match getMatch(){
@@ -47,9 +44,11 @@ public class UserInteface implements Observer{
             main.getPlayerLabel().setText("<html>Player <font color='"+match.getCurrentPlayer().color+"'>"+match.getCurrentPlayer().color+"</font> is your turn!</html>");
 
         }else {
-            ColorMode winner = getMatch().history.getList().get(getMatch().history.getList().size()-1).getPlayer();
-            main.getPlayerLabel().setText("<html> GAME ENDED! <br><font color='"+winner+"'>"+winner+"</font> has won!</html>");
+            if (getMatch().history.getList().size()!=0) {
+                ColorMode winner = getMatch().history.getList().get(getMatch().history.getList().size() - 1).getPlayer();
 
+                main.getPlayerLabel().setText("<html> GAME ENDED! <br><font color='" + winner + "'>" + winner + "</font> has won!</html>");
+            }
         }
 
         main.getTimeLabel().setText("Time: "+getMatch().getTime().toString());
@@ -119,6 +118,7 @@ public class UserInteface implements Observer{
                 SwapRule rule;
                 LearningMode learningMode;
                 BotType botType;
+                BotType botType2 = null;
                 if(settings.getPlayermode().getSelectedItem().equals("Singleplayer"))
                     gameType = GameType.Singleplayer;
                 else if (settings.getPlayermode().getSelectedItem().equals("Multiplayer"))
@@ -139,11 +139,11 @@ public class UserInteface implements Observer{
                     learningMode = LearningMode.Active;
                 else
                     learningMode = LearningMode.NotActive;
-                if(settings.getBotdifficulty().getSelectedItem().equals("PathFinding"))
+                if(settings.getBot1difficulty().getSelectedItem().equals("PathFinding"))
                     botType = BotType.PathFinding;
-                else if(settings.getBotdifficulty().getSelectedItem().equals("MCTS"))
+                else if(settings.getBot1difficulty().getSelectedItem().equals("MCTS"))
                     botType = BotType.MCTS;
-                else if(settings.getBotdifficulty().getSelectedItem().equals("MCTS_alt"))
+                else if(settings.getBot1difficulty().getSelectedItem().equals("MCTS_alt"))
                     botType = BotType.MCTS_alt;
                 else
                     botType = BotType.AlphaBeta;
@@ -151,7 +151,7 @@ public class UserInteface implements Observer{
 
 
 
-                match = new Match(gameType,firstPlayer,rule,learningMode, botType,11, panel);
+                match = new Match(gameType,firstPlayer,rule,learningMode, botType,botType2,11, panel);
                 match.addObserver(thisInteface);
 
                 setMain();
@@ -272,7 +272,9 @@ public class UserInteface implements Observer{
                             }else {
                                 pl = 0;
                             }
-                            panel.setLastSelected(new int[]{pl,i, j});
+                            if (match.getGameType() != GameType.BotFight)panel.setLastSelected(new int[]{pl,i, j}); else
+                                panel.setLastSelected(null);
+
                             panel.repaint();
                             break outerloop;
                         }

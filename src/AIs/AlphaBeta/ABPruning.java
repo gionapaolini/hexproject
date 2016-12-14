@@ -21,7 +21,7 @@ public class ABPruning {
         initialState=board;
         this.colorMode=colorMode;
         depthLvl = 3;
-        maxTime = 10000;
+        maxTime = 500;
     }
 
     public Move start(){

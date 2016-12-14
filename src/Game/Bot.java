@@ -19,6 +19,14 @@ public class Bot extends Player{
     PathFindingBot pathFindingBot;
     MonteCarloTreeSearch monteCarloTreeSearch;
     public void makeMove() {
+
+        Thread t = new Thread((() -> makeMoveThread()));
+        t.start();
+
+    }
+
+    private void makeMoveThread() {
+
         Move bestMove;
         if (botType == BotType.MCTS) {
             monteCarloTreeSearch = new MonteCarloTreeSearch(match.getBoard(),color);
@@ -34,7 +42,6 @@ public class Bot extends Player{
         match.putStone(bestMove.x,bestMove.y);
 
     }
-
 
 
     public Bot(Match match, BotType botType){

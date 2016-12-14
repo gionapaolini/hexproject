@@ -18,6 +18,7 @@ import java.util.Scanner;
  * Created by giogio on 9/17/16.
  */
 public class Match {
+
     private Player[] players;
     private List<Observer> observers;
     private Board board;
@@ -28,6 +29,7 @@ public class Match {
     private LearningMode learningMode;
     private SwapRule rule;
     private BotType botType;
+    private final BotType botType2;
     private boolean paused;
     public History history;
     private short nTurn,sideLength;
@@ -35,12 +37,13 @@ public class Match {
     private TimeMatch time;
     private Timer timer;
 
-    public Match(GameType gameType, FirstPlayer firstPlayer, SwapRule rule, LearningMode learningMode, BotType type, int sideLenght, BoardPanel gamePanel){
+    public Match(GameType gameType, FirstPlayer firstPlayer, SwapRule rule, LearningMode learningMode, BotType type,BotType type2, int sideLenght, BoardPanel gamePanel){
         this.gameType = gameType;
         this.rule = rule;
         this.learningMode = learningMode;
         this.sideLength = (short) sideLenght;
         this.botType = type;
+        this.botType2 = type2;
         time = new TimeMatch();
         board = new Board(sideLenght);
         observers = new ArrayList<Observer>();
@@ -77,10 +80,18 @@ public class Match {
             players[0].setColor(ColorMode.Blue);
             players[1].setColor(ColorMode.Red);
         }else {
-            players[0] = new Bot(this,botType);
-            players[1] = new Bot(this,botType);
-            players[0].setColor(ColorMode.Blue);
-            players[1].setColor(ColorMode.Red);
+            if(firstPlayer== FirstPlayer.Yes) {
+                players[0] = new Bot(this,botType);
+                players[1] = new Bot(this,botType);
+                players[0].setColor(ColorMode.Blue);
+                players[1].setColor(ColorMode.Red);
+            }else{
+                players[0] = new Bot(this,botType);
+                players[1] = new Bot(this,botType2);
+                players[0].setColor(ColorMode.Red);
+                players[1].setColor(ColorMode.Blue);
+            }
+
         }
 
         notifyObservers();
@@ -203,7 +214,7 @@ public class Match {
         timer.start();
         currentPlayer = players[0];
 
-
+        notifyObservers();
         if(currentPlayer instanceof Bot){
 
             currentPlayer.makeMove();
@@ -237,6 +248,7 @@ public class Match {
         }else {
             currentPlayer=players[0];
         }
+
         if(currentPlayer instanceof Bot){
             System.out.println("Making a move");
             currentPlayer.makeMove();

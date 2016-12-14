@@ -11,13 +11,16 @@ public class BoardPanel extends JPanel implements Observer{
 
     Match match;
     private int[] lastSelected;
+    Thread t;
     public BoardPanel(Match m){
+
         match = m;
         this.setPreferredSize(new Dimension(720,385));
         this.setMinimumSize(new Dimension(720,385));
         this.setBackground(new Color(0,0,0));
 
     }
+
 
     public int[] getLastSelected() {
         return lastSelected;
