@@ -55,7 +55,50 @@ public class Board {
         }
     }
 
+    public boolean isConnectedPlayout(ColorMode colorMode) {
+        for(int i=0;i<grid[0].length;i++){
+            for(int j=0;j<grid[0].length;j++) {
+                if(grid[j][i].getStatus()==0) {
+                    if (Math.random()<0.5) grid[j][i].setStatus((byte) 1); else grid[j][i].setStatus((byte) 2);
+                }
+            }
+            }
+        if(colorMode==ColorMode.Blue){
+            //Check if one of the cell in the first row is connected to one of the last
+            for(int i=0;i<grid[0].length;i++){
+                for(int j=0;j<grid[0].length;j++){
+                    uncheckGrid();
+                    if(grid[0][i].getStatus()==0) {
+                        if (Math.random()<0.5) grid[0][i].setStatus((byte) 1); else grid[0][i].setStatus((byte) 2);
+                    }
+                    if(grid[0][i].getStatus()==1 && grid[0][i].isConnectedPlayout(grid[grid.length - 1][j])){
+                        return true;
+
+                    }
+
+                }
+            }
+            return false;
+        }else{
+            //Check if one of the cell in the first column is connected to one of the last
+            for(int i=0;i<grid.length;i++){
+                for(int j=0;j<grid.length;j++){
+                    uncheckGrid();
+                    if(grid[i][0].getStatus()==0){
+                        if (Math.random()<0.5) grid[i][0].setStatus((byte) 1); else grid[i][0].setStatus((byte) 2);
+                    }
+                    if(grid[i][0].getStatus()==2 && grid[i][0].isConnectedPlayout(grid[j][grid[0].length - 1])){
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+
+    }
     public boolean isConnected(ColorMode colorMode){
+
         if(colorMode==ColorMode.Blue){
             //Check if one of the cell in the first row is connected to one of the last
             for(int i=0;i<grid[0].length;i++){
@@ -175,5 +218,11 @@ public class Board {
 
 
         return moves;
+    }
+
+
+    public void setFlags() {
+        flagColor=true;
+        flagFreeColor=true;
     }
 }

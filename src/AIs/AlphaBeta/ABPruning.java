@@ -20,8 +20,8 @@ public class ABPruning {
     public ABPruning(Board board, ColorMode colorMode){
         initialState=board;
         this.colorMode=colorMode;
-        depthLvl = 3;
-        maxTime = 500;
+        depthLvl = 5;
+        maxTime = 1000;
     }
 
     public Move start(){
@@ -95,7 +95,7 @@ public class ABPruning {
 
     public void evaluate(NodeTree child){
         Board testBoard = buildBoardWithStone(child);
-        float firstEval = EvaluationFunction.get_n_bridges(testBoard.getGrid(),child.getColor());
+        /*float firstEval = EvaluationFunction.get_n_bridges(testBoard.getGrid(),child.getColor());
         ArrayList<ArrayList<NodeCell>> groups = EvaluationFunction.getGroups(testBoard.getGrid(),child.getColor());
         float best = 1;
         for(ArrayList<NodeCell> group: groups){
@@ -113,8 +113,12 @@ public class ABPruning {
         if(testBoard.getListColoredCell(child.getParent().getColor()).size()>10){
             secondEval/=2;
         }
+        */
 
-        child.setValue(firstEval+best-secondEval);
+        float firstEval = EvaluationFunction.getSickEval(testBoard.getGrid(),child.getColor());
+        float secondEval = EvaluationFunction.getSickEval(testBoard.getGrid(),child.getParent().getColor());
+
+        child.setValue(firstEval-secondEval);
     }
 
     public void backpropagate(NodeTree child){

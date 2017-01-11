@@ -1,14 +1,11 @@
 package Game;
 
-import Game.Enums.ColorMode;
-import Game.Enums.GameType;
-
 /**
  * Created by giogio on 9/17/16.
  */
 public class Human extends Player {
 
-    public void makeMove(){
+    public void makeMove(Move lastMove){
 
     }
 

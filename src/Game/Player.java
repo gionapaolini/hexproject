@@ -8,7 +8,7 @@ import Game.Enums.ColorMode;
 public abstract class Player {
     public ColorMode color;
     Match match;
-    public abstract void makeMove();
+    public abstract void makeMove(Move lastMove);
 
     public void setColor(ColorMode color){
         this.color = color;

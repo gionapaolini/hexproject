@@ -15,4 +15,9 @@ public class Move {
     public String toString(){
         return ("x: " + x + " y: " + y);
     }
+
+    public boolean equals(Object m){
+        Move move = (Move) m;
+        if (move.x == x && move.y == y) return true; else return false;
+    }
 }

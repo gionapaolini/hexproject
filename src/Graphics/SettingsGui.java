@@ -73,6 +73,11 @@ public class SettingsGui {
         return bot1difficulty;
     }
 
+    public JComboBox getBot2difficulty() {
+        return bot2Difficulty;
+    }
+
+
     public JCheckBox getSwaprule() {
         return swaprule;
     }

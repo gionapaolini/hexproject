@@ -1,11 +1,8 @@
 package Game;
 
 import AIs.AlphaBeta.ABPruning;
-import AIs.AlphaBeta.AlphaBetaTree;
-import AIs.MCTS;
 import AIs.MonteCarlo.MonteCarloTreeSearch;
 import AIs.MonteCarlo.MonteCarloTreeSearchAlt;
-import AIs.NodeTree;
 import AIs.PathFinding.PathFindingBot;
 import Game.Enums.BotType;
 import Game.Enums.ColorMode;
@@ -20,21 +17,27 @@ public class Bot extends Player{
     PathFindingBot pathFindingBot;
     MonteCarloTreeSearch monteCarloTreeSearch;
     MonteCarloTreeSearchAlt monteCarloTreeSearchAlt;
-    public void makeMove() {
+    public void makeMove(Move lastMove) {
 
-        Thread t = new Thread((() -> makeMoveThread()));
+        Thread t = new Thread((() -> makeMoveThread(lastMove)));
         t.start();
 
     }
 
-    private void makeMoveThread() {
+    private void makeMoveThread(Move lastMove) {
 
         Move bestMove;
         if (botType == BotType.MCTS) {
             monteCarloTreeSearch = new MonteCarloTreeSearch(match.getBoard(),color);
             bestMove = monteCarloTreeSearch.start();
         }else if (botType == BotType.MCTS_alt){
-            monteCarloTreeSearchAlt = new MonteCarloTreeSearchAlt(match.getBoard(),color);
+            if (monteCarloTreeSearchAlt == null) {
+                int thoughtTime = 500;
+                if (color == ColorMode.Blue) thoughtTime = 1000;
+                if (color == ColorMode.Red) thoughtTime = 1000;
+                    monteCarloTreeSearchAlt = new MonteCarloTreeSearchAlt(match.getBoard(),color,thoughtTime);
+            }
+            monteCarloTreeSearchAlt.adjustRoot(lastMove);
             bestMove = monteCarloTreeSearchAlt.start();
         }
         else if (botType == BotType.PathFinding) {
@@ -45,7 +48,7 @@ public class Bot extends Player{
             bestMove = alpha.start();
         }
 
-        match.putStone(bestMove.x,bestMove.y);
+        match.putStone(bestMove.x, bestMove.y);
 
     }
 

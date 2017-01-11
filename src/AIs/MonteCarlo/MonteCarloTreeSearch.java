@@ -23,13 +23,12 @@ public class MonteCarloTreeSearch {
     double startTime;
     Board initialBoard;
     ColorMode colorMode;
-    private int simulationCount;
 
     public MonteCarloTreeSearch(Board board, ColorMode colorMode){
         initialBoard = board;
         this.colorMode = colorMode;
         depthLvl = 5;
-        maxTime = 1050;
+        maxTime = 10500;
         max_move_simulation = 60;
 
     }
@@ -39,7 +38,7 @@ public class MonteCarloTreeSearch {
     }
 
     public Move start(){
-        simulationCount = 0;
+
         NodeTree root = new NodeTree(null);
         if(colorMode ==ColorMode.Red)
             root.setColorMode(ColorMode.Blue);
@@ -60,8 +59,6 @@ public class MonteCarloTreeSearch {
         }
 
         printTree(root);
-
-        System.out.println("Simulations made for this turn:" + simulationCount);
         return bestNode.getMove();
 
 
@@ -108,7 +105,7 @@ public class MonteCarloTreeSearch {
             copy.placeStone(inBuild.getMove().x,inBuild.getMove().y,inBuild.colorMode);
             inBuild = inBuild.getParent();
         }
-        ArrayList<Move> freeMoves = (ArrayList<Move>) copy.getListFreeCell().clone();
+        ArrayList<Move> freeMoves = copy.getListFreeCell();
         int countMoves = 0;
         while (freeMoves.size()>0 && countMoves<max_move_simulation){
             if(System.currentTimeMillis()-startTime<maxTime) {
@@ -125,7 +122,6 @@ public class MonteCarloTreeSearch {
         }
     }
     public void simulation(NodeTree node){
-        simulationCount++;
         Board copy = initialBoard.getCopy();
         NodeTree inBuild = node;
         while (inBuild.parent!=null){
@@ -204,7 +200,7 @@ public class MonteCarloTreeSearch {
             }
         }
 
-        ArrayList<Move> moves = (ArrayList<Move>) board.getListColoredCell(ColorMode.Red).clone();
+        ArrayList<Move> moves = board.getListColoredCell(ColorMode.Red);
         while (moves.size()<0){
             Move move = moves.remove((int)(Math.random()*moves.size()));
             NodeCell nodeCell = board.getGrid()[move.x][move.y];
@@ -358,7 +354,7 @@ public class MonteCarloTreeSearch {
             }
         }
 
-        ArrayList<Move> moves = (ArrayList<Move>) board.getListColoredCell(ColorMode.Blue).clone();
+        ArrayList<Move> moves = board.getListColoredCell(ColorMode.Blue);
         while (moves.size()<0){
             Move move = moves.remove((int)(Math.random()*moves.size()));
             NodeCell nodeCell = board.getGrid()[move.x][move.y];

@@ -1,5 +1,6 @@
 package Graphics;
 
+import AIs.AlphaBeta.EvaluationFunction;
 import Game.*;
 import Game.Enums.*;
 
@@ -148,6 +149,16 @@ public class UserInteface implements Observer{
                 else
                     botType = BotType.AlphaBeta;
 
+                if(settings.getBot2difficulty().getSelectedItem().equals("PathFinding"))
+                    botType2 = BotType.PathFinding;
+                else if(settings.getBot2difficulty().getSelectedItem().equals("MCTS"))
+                    botType2 = BotType.MCTS;
+                else if(settings.getBot2difficulty().getSelectedItem().equals("MCTS_alt"))
+                    botType2 = BotType.MCTS_alt;
+                else
+                    botType2 = BotType.AlphaBeta;
+
+
 
 
 
@@ -198,7 +209,8 @@ public class UserInteface implements Observer{
         main.getPauseButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                 match.switchPlayer();
+                 System.out.println(EvaluationFunction.get_n_bridges(match.getBoard().getGrid(), ColorMode.Blue));
+                System.out.println(EvaluationFunction.get_n_bridges(match.getBoard().getGrid(), ColorMode.Red));
 
                 /*
                match.pause();

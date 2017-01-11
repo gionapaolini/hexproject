@@ -20,13 +20,23 @@ public class EvaluationFunction {
         for(int i=0;i<grid.length;i++){
             for(int j=0;j<grid.length;j++){
                 if(grid[i][j].getColor()==colorMode){
+                    if(colorMode == ColorMode.Blue) {
+                        if (j != 10 && i == 1 && grid[0][j].getColor() == null && grid[0][j + 1].getColor() == null) {
+                            point++;
+                        }
+                        if (j != 0 && i == 9 && grid[10][j].getColor() == null && grid[10][j - 1].getColor() == null) {
+                            point++;
+                        }
+                    }
+                    if(colorMode == ColorMode.Red) {
+                        if (j == 1 && i != 10 && grid[i][0].getColor() == null && grid[i+1][0].getColor() == null) {
+                            point++;
+                        }
+                        if (j == 9 && i != 0 && grid[i][10].getColor() == null && grid[i-1][10].getColor() == null) {
+                            point++;
+                        }
+                    }
 
-                    if(j!=10 && i==1 && grid[0][j].getColor()==null && grid[0][j+1].getColor()==null){
-                        point++;
-                    }
-                    if(j!=0 && i==9 && grid[10][j].getColor()==null && grid[10][j-1].getColor()==null){
-                        point++;
-                    }
 
 
 
@@ -337,5 +347,72 @@ public class EvaluationFunction {
         //TO COMPLETE
         return null;
     }
+
+    public static float getSickEval(NodeCell[][] grid, ColorMode colorMode){
+        float ratio = 0;
+        if(colorMode == ColorMode.Blue) {
+            int[] horizontal = new int[10];
+            //Getting #horizontal
+            for (int j = 0; j < 10 ; j++) {
+                for (int jj = j; jj < j + 2; jj++) {
+                    for (int i = 0; i < grid.length; i++) {
+                        if (grid[i][jj].getColor() == ColorMode.Blue) {
+                            horizontal[j]++;
+                        }
+                    }
+                }
+            }
+            int[] vertical = new int[10];
+            //Getting #vertical
+            for (int j = 0; j < 10 ; j++) {
+                for (int jj = j; jj < j + 2; jj++) {
+                    for (int i = 0; i < grid.length; i++) {
+                        if (grid[jj][i].getColor() == ColorMode.Blue) {
+                            vertical[j]++;
+                        }
+                    }
+                }
+            }
+            System.out.println("DRatio Hor " + (getMax(horizontal)) + " Ver " + (getMax(vertical)));
+            ratio = (float)(getMax(horizontal)) / (float)(getMax(vertical));
+        }else {
+            int[] horizontal = new int[10];
+            //Getting #horizontal
+            for (int j = 0; j < 10 ; j++) {
+                for (int jj = j; jj < j + 2; jj++) {
+                    for (int i = 0; i < grid.length; i++) {
+                        if (grid[i][jj].getColor() == ColorMode.Red) {
+                            horizontal[j]++;
+                        }
+                    }
+                }
+            }
+            int[] vertical = new int[10];
+            //Getting #vertical
+            for (int j = 0; j < 10 ; j++) {
+                for (int jj = j; jj < j + 2; jj++) {
+                    for (int i = 0; i < grid.length; i++) {
+                        if (grid[jj][i].getColor() == ColorMode.Red) {
+                            vertical[j]++;
+                        }
+                    }
+                }
+            }
+            System.out.println("DRatio Hor " + (getMax(horizontal)) + " Ver " + (getMax(vertical)));
+            ratio = (float)(getMax(vertical)) / (float)getMax(horizontal);
+        }
+        return ratio;
+    }
+
+    public static int getMax(int[] arr){
+        int max = arr[0];
+        for (int i = 1; i < arr.length; i++) {
+            if (arr[i] > max) {
+                max = arr[i];
+            }
+        }
+        return max;
+    }
+
 
 }

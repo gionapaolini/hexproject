@@ -82,7 +82,7 @@ public class Match {
         }else {
             if(firstPlayer== FirstPlayer.Yes) {
                 players[0] = new Bot(this,botType);
-                players[1] = new Bot(this,botType);
+                players[1] = new Bot(this,botType2);
                 players[0].setColor(ColorMode.Blue);
                 players[1].setColor(ColorMode.Red);
             }else{
@@ -217,7 +217,7 @@ public class Match {
         notifyObservers();
         if(currentPlayer instanceof Bot){
 
-            currentPlayer.makeMove();
+            currentPlayer.makeMove(null);
         }
 
         notifyObservers();
@@ -242,7 +242,7 @@ public class Match {
     }
 
 
-    public void switchPlayer(){
+    public void switchPlayer(Move lastMove){
         if(currentPlayer == players[0]){
             currentPlayer=players[1];
         }else {
@@ -251,7 +251,7 @@ public class Match {
 
         if(currentPlayer instanceof Bot){
             System.out.println("Making a move");
-            currentPlayer.makeMove();
+            currentPlayer.makeMove(lastMove);
         }
         notifyObservers();
     }
@@ -279,7 +279,7 @@ public class Match {
             hasWon(currentPlayer.color);
             notifyObservers();
             if (currentPlayer != null /*&& !(currentPlayer instanceof Bot)*/) {
-                switchPlayer();
+                switchPlayer(new Move(x, y));
             }
             nTurn++;
             notifyObservers();

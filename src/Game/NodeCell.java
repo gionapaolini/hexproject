@@ -15,6 +15,8 @@ public class NodeCell {
     private byte status;
 
     private boolean checked;
+    private boolean flag;
+
 
     private int x, y;
     public NodeCell(int coordX, int coordY) {
@@ -26,6 +28,21 @@ public class NodeCell {
 
     public void uncheck(){
         checked = false;
+    }
+
+    public boolean isConnectedPlayout(NodeCell second) {
+        if(this.getStatus()==0) {
+            if (Math.random()<0.5) this.status = 1; else  this.status=2;
+        }
+        if(second.getStatus()==0) {
+            if (Math.random()<0.5) second.status = 1; else  second.status=2;
+        }
+        if(this.getStatus()==second.getStatus())
+            return isConnectedToPlayout(second);
+        else
+            return false;
+
+
     }
 
     public boolean isConnected(NodeCell second){
@@ -46,6 +63,35 @@ public class NodeCell {
 
 
     }
+    public boolean isConnectedToPlayout(NodeCell second){
+        this.setChecked(true);
+        if(checkNodePlayout(upperL, second) || checkNodePlayout(upperR, second) || checkNodePlayout(right, second)
+                || checkNodePlayout(lowerR, second) || checkNodePlayout(lowerL, second) || checkNodePlayout(left, second))
+            return true;
+        else
+            return false;
+
+
+    }
+
+    private boolean checkNodePlayout(NodeCell first, NodeCell second){
+        if(this.status==0) {
+            if (Math.random()<0.5) this.status = 1; else  this.status=2;
+        }
+        if(second.status==0) {
+            if (Math.random()<0.5) second.status = 1; else  second.status=2;
+        }
+
+        if(first!=null && first.getStatus()==this.getStatus() && !first.isChecked()) {
+            if (first == second) {
+                return true;
+            } else if (first.isConnectedTo(second)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     private boolean checkNode(NodeCell first, NodeCell second){
 
@@ -60,7 +106,7 @@ public class NodeCell {
     }
 
     public ArrayList<NodeCell> getListFriend(ColorMode colorMode){
-        ArrayList<NodeCell> list = new ArrayList<NodeCell>();
+        ArrayList<NodeCell> list = new ArrayList<NodeCell>(6);
         if(upperL!=null && upperL.getColor()==colorMode)
             list.add(upperL);
         if(upperR!=null && upperR.getColor()==colorMode)
@@ -186,6 +232,7 @@ public class NodeCell {
     }
     public void setStatus(byte status) {
             this.status = status;
+
     }
 
     public ColorMode getColor(){
@@ -253,4 +300,6 @@ public class NodeCell {
     public void setY(int y) {
         this.y = y;
     }
+
+
 }

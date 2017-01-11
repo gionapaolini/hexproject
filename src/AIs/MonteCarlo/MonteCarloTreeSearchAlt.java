@@ -1,37 +1,32 @@
 package AIs.MonteCarlo;
 
 import AIs.AlphaBeta.EvaluationFunction;
-import AIs.PathFinding.PathFindingAlgorithm;
-import AIs.PathFinding.PathFindingBot;
 import Game.Board;
 import Game.Enums.ColorMode;
-import Game.Match;
 import Game.Move;
 import Game.NodeCell;
 
 import java.util.ArrayList;
-import java.util.Random;
-import java.util.Scanner;
-import java.util.jar.Pack200;
 
 /**
  * Created by giogio on 12/1/16.
  */
 public class MonteCarloTreeSearchAlt {
+    private NodeTree root;
     int depthLvl, max_move_simulation;
     int maxTime;
     double startTime;
     Board initialBoard;
     ColorMode colorMode;
-    private int simulationCount;
+    private int simulationCountInThisTurn;
 
-    public MonteCarloTreeSearchAlt(Board board, ColorMode colorMode){
+    public MonteCarloTreeSearchAlt(Board board, ColorMode colorMode,int maxTime){
         initialBoard = board;
         this.colorMode = colorMode;
         depthLvl = 5;
-        maxTime = 2050;
+        this.maxTime = maxTime;
         max_move_simulation = 300;
-
+        root = new NodeTree(null);
     }
 
     public void setMaxTime(int max){
@@ -39,8 +34,8 @@ public class MonteCarloTreeSearchAlt {
     }
 
     public Move start(){
-        simulationCount = 0;
-        NodeTree root = new NodeTree(null);
+        simulationCountInThisTurn = 0;
+
         if(colorMode ==ColorMode.Red)
             root.setColorMode(ColorMode.Blue);
         else
@@ -50,24 +45,36 @@ public class MonteCarloTreeSearchAlt {
             NodeTree node= selection(root);
             expansion(node);
         }
+
         NodeTree bestNode = root.getChildrens().get(0);
-        double mostGames = bestNode.value;
+        double mostGames = bestNode.games;
         Board finalCheckIfWinningMovePossible = initialBoard.getCopy();
         for(NodeTree child: root.childrens){
             finalCheckIfWinningMovePossible.placeStone(child.getMove().x,child.getMove().y,colorMode);
             if (finalCheckIfWinningMovePossible.isConnected(colorMode)) {
                 bestNode = child;
                 break;
+            }else {
+                finalCheckIfWinningMovePossible.getGrid()[child.getMove().x][child.getMove().y].setStatus((byte) 0);
             }
-            if(child.value>mostGames){
+            if(child.games>mostGames){
                 bestNode = child;
-                mostGames = child.value;
+                mostGames = bestNode.games;
             }
         }
 
-        printTree(root);
+       // printTree(root);
+        System.out.println("Possible choices");
 
-        System.out.println("Simulations made for this turn:" + simulationCount);
+        for(NodeTree child: root.childrens){
+            System.out.println(child.getMove().toString()+ ": " + child.value + " Simulations: " + child.games);
+        }
+
+        System.out.println("chosen: " + bestNode.getMove().toString());
+        System.out.println("Simulations made for this turn:" + simulationCountInThisTurn);
+
+        adjustRoot(bestNode.getMove());
+        printTree(root);
         return bestNode.getMove();
 
 
@@ -104,7 +111,7 @@ public class MonteCarloTreeSearchAlt {
 
         for (NodeTree node: startingNode.childrens){
             double divisor = node.games; if (divisor==0) divisor = 1;
-            double value = node.wins/divisor +Math.sqrt(7*logT/divisor);
+            double value = node.wins/divisor +Math.sqrt(2*logT/divisor);
             if(value>bestVal) {
                 best = node;
                 bestVal = value;
@@ -123,8 +130,9 @@ public class MonteCarloTreeSearchAlt {
             inBuild = inBuild.getParent();
         }
         if (node.games==0){
-            simulation(node);
-            backpropagation(node);
+           // simulation(node);
+            //backpropagation(node);
+            //break;
         }
 
 
@@ -138,8 +146,11 @@ public class MonteCarloTreeSearchAlt {
                 newNode.setMove(move);
 
                 //select only one node
-                //simulation(newNode);
-               // backpropagation(newNode);
+                for (int i = 0; i < 1; i++) {
+                    simulation(newNode);
+                    backpropagation(newNode);
+                }
+
 
             }else {
                 break;
@@ -148,14 +159,26 @@ public class MonteCarloTreeSearchAlt {
         }
     }
     public void simulation(NodeTree node){
-        simulationCount++;
+        simulationCountInThisTurn++;
         Board copy = initialBoard.getCopy();
         NodeTree inBuild = node;
         while (inBuild.parent!=null){
             copy.placeStone(inBuild.getMove().x,inBuild.getMove().y,inBuild.colorMode);
             inBuild = inBuild.getParent();
-
         }
+        boolean quick = copy.isConnectedPlayout(node.colorMode);
+        ColorMode c2; if (node.colorMode == ColorMode.Blue) c2 = ColorMode.Red; else c2 = ColorMode.Red;
+        boolean quick2 = copy.isConnectedPlayout(c2);
+        copy.setFlags();
+        System.out.println(copy.getListFreeCell().size());
+        node.games++;
+        if(quick) node.wins++;
+        System.out.println(quick);
+        System.out.println(quick2);
+        node.setValue(node.wins/(float)node.games);
+        if (true) return;
+
+
         ColorMode currentPlaying;
         if(node.colorMode == ColorMode.Blue)
             currentPlaying = ColorMode.Red;
@@ -163,28 +186,31 @@ public class MonteCarloTreeSearchAlt {
             currentPlaying = ColorMode.Blue;
         boolean alreadyWon = copy.isConnected(node.colorMode);
         Move previousMove = null;
+        ArrayList<Move> moves = copy.getListFreeCell();
         while (1 == 1&&(!alreadyWon)){
             if(currentPlaying == ColorMode.Blue) {
+
                 Move move = blueSimulation(copy,previousMove);
                 if(move==null) {
-                    currentPlaying = ColorMode.Red;
                     break;
                 }
+                //Move move = moves.remove((int)(Math.random()*moves.size()));
                 copy.placeStone(move.x,move.y,currentPlaying);
-                previousMove = move;
+             //   previousMove = move;
 
                 if(copy.isConnected(ColorMode.Blue))
                     break;
                 currentPlaying = ColorMode.Red;
             }else {
+
                 Move move = redSimulation(copy,previousMove);
                 if(move==null) {
-                    currentPlaying = ColorMode.Blue;
-
                     break;
                 }
+
+                //Move move = moves.remove((int)(Math.random()*moves.size()));
                 copy.placeStone(move.x,move.y,currentPlaying);
-                previousMove = move;
+               // previousMove = move;
 
                 if(copy.isConnected(ColorMode.Red))
                     break;
@@ -199,6 +225,7 @@ public class MonteCarloTreeSearchAlt {
     }
 
     public static Move redSimulation(Board board, Move enemyMove){
+        if (true) return board.getListFreeCell().get((int)(Math.random()*board.getListFreeCell().size()));
         if(board.getListFreeCell().size()==0){
             return null;
         }
@@ -355,6 +382,7 @@ public class MonteCarloTreeSearchAlt {
     }
 
     public static Move blueSimulation(Board board, Move enemyMove){
+        if (true) return board.getListFreeCell().get((int)(Math.random()*board.getListFreeCell().size()));
         ArrayList<ArrayList<NodeCell>> groups = EvaluationFunction.getGroups(board.getGrid(),ColorMode.Red);
         if(board.getListFreeCell().size()==0)
             return null;
@@ -383,6 +411,7 @@ public class MonteCarloTreeSearchAlt {
         }
 
         ArrayList<Move> moves = (ArrayList<Move>) board.getListColoredCell(ColorMode.Blue).clone();
+
         while (moves.size()<0){
             Move move = moves.remove((int)(Math.random()*moves.size()));
             NodeCell nodeCell = board.getGrid()[move.x][move.y];
@@ -395,6 +424,20 @@ public class MonteCarloTreeSearchAlt {
         return board.getListFreeCell().get((int)(Math.random()*board.getListFreeCell().size()));
     }
 
+    public void adjustRoot(Move lastMove) {
+        if (lastMove == null) {root = new NodeTree(null);return;};
+        ArrayList<NodeTree> nodeTrees = root.getChildrens();
+        for(NodeTree nt: nodeTrees){
+            if (nt.getMove().equals(lastMove)) {
+                root = nt;
+                root.setParent(null);
+                root.setMove(lastMove);
+                return;
+            }
+        }
+
+
+    }
 
     /*
         public static Move blueSimulation(Board board, Move enemyMove){
@@ -472,6 +515,7 @@ public class MonteCarloTreeSearchAlt {
             win = !win;
             current.parent.games++;
             if (win)current.parent.wins+=1;//
+            //if (!win)current.parent.wins-=1;
             System.out.println("win:" + current.parent.wins);
             current = current.getParent();
 
@@ -480,7 +524,7 @@ public class MonteCarloTreeSearchAlt {
 
         }
      //   System.out.println();
-        printTree(current); //prints the tree every time
+      //  printTree(current); //prints the tree every time
     }
 
 
@@ -601,4 +645,5 @@ public class MonteCarloTreeSearchAlt {
         return orderedListUD;
 
     }
+
 }
