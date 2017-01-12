@@ -2,27 +2,24 @@ package AIs.MonteCarlo;
 
 import Game.Enums.ColorMode;
 import Game.Move;
-import hypertree.HTNode;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Enumeration;
 
 /**
  * Created by giogio on 12/1/16.
  */
-public class NodeTree implements HTNode {
+public class NodeTree_Backup {
     Move move;
     ColorMode colorMode;
     float value;
     int games, wins;
-    NodeTree parent;
-    ArrayList<NodeTree> childrens;
+    NodeTree_Backup parent;
+    ArrayList<NodeTree_Backup> childrens;
 
 
-    public NodeTree(NodeTree parent){
+    public NodeTree_Backup(NodeTree_Backup parent){
         this.parent = parent;
-        childrens = new ArrayList<NodeTree>();
+        childrens = new ArrayList<NodeTree_Backup>();
         if(parent!=null){
 
             parent.addChild(this);
@@ -39,7 +36,7 @@ public class NodeTree implements HTNode {
     }
 
     public int getDepth(){
-        NodeTree node = this;
+        NodeTree_Backup node = this;
         int count = 0;
         while (node.parent!=null){
             count++;
@@ -48,7 +45,7 @@ public class NodeTree implements HTNode {
         return count;
     }
 
-    public void addChild(NodeTree child){
+    public void addChild(NodeTree_Backup child){
         childrens.add(child);
     }
 
@@ -76,37 +73,21 @@ public class NodeTree implements HTNode {
         this.value = value;
     }
 
-    public NodeTree getParent() {
+    public NodeTree_Backup getParent() {
         return parent;
     }
 
-    public void setParent(NodeTree parent) {
+    public void setParent(NodeTree_Backup parent) {
         this.parent = parent;
     }
 
-    public ArrayList<NodeTree> getChildrens() {
+    public ArrayList<NodeTree_Backup> getChildrens() {
         return childrens;
     }
 
-    public void setChildrens(ArrayList<NodeTree> childrens) {
+    public void setChildrens(ArrayList<NodeTree_Backup> childrens) {
         this.childrens = childrens;
     }
 
 
-    @Override
-    public Enumeration children() {
-        Enumeration c = Collections.enumeration(childrens);
-        return c;
-    }
-
-    @Override
-    public boolean isLeaf() {
-        if (childrens.size()==0)return true;
-        return false;
-    }
-
-    @Override
-    public String getName() {
-        return move.toString();
-    }
 }

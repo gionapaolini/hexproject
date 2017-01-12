@@ -33,8 +33,8 @@ public class Bot extends Player{
         }else if (botType == BotType.MCTS_alt){
             if (monteCarloTreeSearchAlt == null) {
                 int thoughtTime = 500;
-                if (color == ColorMode.Blue) thoughtTime = 1000;
-                if (color == ColorMode.Red) thoughtTime = 1000;
+                if (color == ColorMode.Blue) thoughtTime = 20000;
+                if (color == ColorMode.Red) thoughtTime = 20000;
                     monteCarloTreeSearchAlt = new MonteCarloTreeSearchAlt(match.getBoard(),color,thoughtTime);
             }
             monteCarloTreeSearchAlt.adjustRoot(lastMove);
@@ -49,6 +49,7 @@ public class Bot extends Player{
         }
 
         match.putStone(bestMove.x, bestMove.y);
+        match.lastSearchTree(monteCarloTreeSearchAlt.getRoot());
 
     }
 

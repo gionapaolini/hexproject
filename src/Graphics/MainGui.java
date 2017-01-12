@@ -1,5 +1,7 @@
 package Graphics;
 
+import Game.BoardPanel;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -9,6 +11,9 @@ import java.awt.event.ActionListener;
  * Created by giogio on 10/4/16.
  */
 public class MainGui {
+
+
+    private BoardPanel boardPanel;
     private JPanel mainPanel;
     private JButton historyButton;
     private JButton pauseButton;
@@ -28,8 +33,9 @@ public class MainGui {
     private JFrame frame;
     private Analysor analysor;
 
-    public MainGui(JPanel panel, JFrame frame){
+    public MainGui(BoardPanel panel, JFrame frame){
         gridPanel.setLayout(new BoxLayout(gridPanel, BoxLayout.PAGE_AXIS));
+        boardPanel = panel;
         gridPanel.add(panel);
         this.frame = frame;
         System.out.println(mainPanel.getMaximumSize());
@@ -76,6 +82,10 @@ public class MainGui {
                     analysor.setVisible(!analysor.isVisible());
             }
         });
+    }
+
+    public BoardPanel getBoardPanel() {
+        return boardPanel;
     }
 
     public JPanel getMainPanel() {

@@ -9,6 +9,10 @@ import java.awt.*;
 
 public class BoardPanel extends JPanel implements Observer{
 
+    public Match getMatch() {
+        return match;
+    }
+
     Match match;
     private int[] lastSelected;
     Thread t;

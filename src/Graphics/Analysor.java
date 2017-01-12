@@ -66,8 +66,9 @@ public class Analysor extends JFrame{
     private void showHyperView(MainGui mainGui) {
         String pathRoot = "I:\\DateienBilderPersönlich";
         File rootFile = new File(pathRoot);
-        HTFileNode root = new HTFileNode(rootFile);
-        HyperTree hypertree = new HyperTree(root);
+
+
+        HyperTree hypertree = new HyperTree(mainGui.getBoardPanel().getMatch().getLastSearchTree());
         Dimension preveredSize = new Dimension(800,600);
                 hyperTreeView = hypertree.getView(preveredSize);
        // this.add(hyperTreeView, BorderLayout.CENTER);

@@ -12,6 +12,8 @@ import java.util.ArrayList;
  * Created by giogio on 12/1/16.
  */
 public class MonteCarloTreeSearchAlt {
+
+
     private NodeTree root;
     int depthLvl, max_move_simulation;
     int maxTime;
@@ -27,6 +29,10 @@ public class MonteCarloTreeSearchAlt {
         this.maxTime = maxTime;
         max_move_simulation = 300;
         root = new NodeTree(null);
+    }
+
+    public NodeTree getRoot() {
+        return root;
     }
 
     public void setMaxTime(int max){

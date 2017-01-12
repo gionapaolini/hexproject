@@ -1,6 +1,5 @@
 package AIs;
 
-import Game.Board;
 import Game.Enums.ColorMode;
 
 import java.util.ArrayList;

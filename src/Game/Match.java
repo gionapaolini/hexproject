@@ -1,5 +1,6 @@
 package Game;
 
+import AIs.MonteCarlo.NodeTree;
 import Game.Enums.*;
 
 import javax.swing.*;
@@ -36,6 +37,10 @@ public class Match {
     private FirstPlayer firstPlayer;
     private TimeMatch time;
     private Timer timer;
+
+
+
+    private NodeTree lastSearchTree;
 
     public Match(GameType gameType, FirstPlayer firstPlayer, SwapRule rule, LearningMode learningMode, BotType type,BotType type2, int sideLenght, BoardPanel gamePanel){
         this.gameType = gameType;
@@ -360,4 +365,14 @@ public class Match {
     public GameType getGameType() {
         return gameType;
     }
+
+    public void lastSearchTree(NodeTree root) {
+        this.lastSearchTree = root;
+    }
+
+    public NodeTree getLastSearchTree() {
+        return lastSearchTree;
+    }
+
+
 }
