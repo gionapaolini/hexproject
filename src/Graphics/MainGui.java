@@ -24,7 +24,9 @@ public class MainGui {
     private JPanel rightPanel;
     private JScrollPane scrollPanel;
     private JLabel timeLabel;
+    private JButton AnalyseButton;
     private JFrame frame;
+    private Analysor analysor;
 
     public MainGui(JPanel panel, JFrame frame){
         gridPanel.setLayout(new BoxLayout(gridPanel, BoxLayout.PAGE_AXIS));
@@ -62,6 +64,16 @@ public class MainGui {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 System.out.println(frame.getSize());
+            }
+        });
+        MainGui mg = this;
+        AnalyseButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (analysor == null) {
+                    analysor = new Analysor(mg);
+                }
+                    analysor.setVisible(!analysor.isVisible());
             }
         });
     }
