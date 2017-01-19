@@ -198,35 +198,41 @@ public class HexGraph {
             System.out.println("Edge out of Bound.");
         }
     }
-    public void findPaths(){
+    public List<List<Node>> findPaths(){
         paths = new ArrayList<List<Node>>();
         ArrayList<Node> iPath = new ArrayList<Node>();
         paths.add(expand(s, iPath));
         System.out.print("-----");
+        return paths;
     }
     public ArrayList<Node> expand(Node selectedNode, ArrayList<Node> inputPath){
         inputPath.add(selectedNode);
         if (selectedNode == t){
             System.out.println("Found Path.");
+            paths.add((ArrayList<Node>)inputPath.clone());
+            inputPath.remove(inputPath.size()-1);
             return inputPath;
-        }else{
-            int sizeChildren = selectedNode.adjEdges.size();
-            for (int i = 0; i < sizeChildren; i++){
-                if (selectedNode.adjEdges.get(i).to != selectedNode && !contains(inputPath, selectedNode.adjEdges.get(i).to)) {
-                    if (selectedNode.adjEdges.get(i).to.getJ() >= selectedNode.getJ()) {
-                        System.out.println("Expanding from " + selectedNode.getI() + "/" + selectedNode.getJ()+ " to " + selectedNode.adjEdges.get(i).to.getI() + "/" + selectedNode.adjEdges.get(i).to.getJ());
-                        return expand(selectedNode.adjEdges.get(i).to, inputPath);
+        }else if(inputPath.size() < NodeList.length + 2){
+                int sizeChildren = selectedNode.adjEdges.size();
+
+                for (Edge e : selectedNode.adjEdges) {
+                    if (e.to != selectedNode && !contains(inputPath, e.to)) {
+                        if (e.to.getJ() >= selectedNode.getJ()) {
+                            System.out.println("Expanding from " + selectedNode.getI() + "/" + selectedNode.getJ() + " to " + e.to.getI() + "/" + e.to.getJ());
+                            inputPath = expand(e.to, inputPath);
+                        }
+                    }
+                    if (e.from != selectedNode && !contains(inputPath, e.from)) {
+                        if (e.from.getJ() >= selectedNode.getJ()) {
+                            System.out.println("Expanding from " + selectedNode.getI() + "/" + selectedNode.getJ() + " to " + e.from.getI() + "/" + e.from.getJ());
+                            inputPath = expand(e.from, inputPath);
+                        }
                     }
                 }
-                if (selectedNode.adjEdges.get(i).from != selectedNode && !contains(inputPath, selectedNode.adjEdges.get(i).from)){
-                    if (selectedNode.adjEdges.get(i).from.getJ() >= selectedNode.getJ()){
-                        System.out.println("Expanding from " + selectedNode.getI() + "/" + selectedNode.getJ()+ " to " + selectedNode.adjEdges.get(i).from.getI() + "/" + selectedNode.adjEdges.get(i).from.getJ());
-                        return expand(selectedNode.adjEdges.get(i).from, inputPath);
-                    }
-                }
-            }
         }
-        return null;
+        inputPath.remove(inputPath.size()-1);
+
+        return inputPath;
     }
     public boolean contains(ArrayList<Node> path, Node node){
         for(int i=0;i<path.size();i++){

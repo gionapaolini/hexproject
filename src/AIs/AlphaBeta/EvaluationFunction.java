@@ -1,5 +1,6 @@
 package AIs.AlphaBeta;
 
+import AIs.FlowNetwork.HexGraph;
 import AIs.PathFinding.PathFindingAlgorithm;
 import Game.Board;
 import Game.Enums.ColorMode;
@@ -8,12 +9,15 @@ import Game.NodeCell;
 
 import javax.xml.soap.Node;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 /**
  * Created by giogio on 11/16/16.
  */
 public class EvaluationFunction {
+
+    HexGraph graph;
 
     public static int get_n_bridges(NodeCell[][] grid, ColorMode colorMode){
         int point = 0;
@@ -346,6 +350,11 @@ public class EvaluationFunction {
     public ArrayList<ArrayList<NodeCell>> blueDirection(ArrayList<ArrayList<NodeCell>> list){
         //TO COMPLETE
         return null;
+    }
+
+    public static float sickerthanyouraverage(HexGraph graph, ColorMode colorMode){
+        List<List<AIs.FlowNetwork.Node>> paths = graph.findPaths();
+        return paths.size();
     }
 
     public static float getSickEval(NodeCell[][] grid, ColorMode colorMode){

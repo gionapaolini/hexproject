@@ -1,5 +1,6 @@
 package AIs.AlphaBeta;
 
+import AIs.FlowNetwork.HexGraph;
 import Game.Board;
 import Game.Enums.ColorMode;
 import Game.Move;
@@ -17,11 +18,14 @@ public class ABPruning {
     int depthLvl;
     int maxTime;
     double startTime;
+    HexGraph graph;
+
     public ABPruning(Board board, ColorMode colorMode){
         initialState=board;
         this.colorMode=colorMode;
         depthLvl = 5;
         maxTime = 1000;
+        graph = new HexGraph(board.getGrid().length);
     }
 
     public Move start(){
@@ -115,10 +119,13 @@ public class ABPruning {
         }
         */
 
-        float firstEval = EvaluationFunction.getSickEval(testBoard.getGrid(),child.getColor());
-        float secondEval = EvaluationFunction.getSickEval(testBoard.getGrid(),child.getParent().getColor());
+        //OLD EVALUATION
+        //float firstEval = EvaluationFunction.getSickEval(testBoard.getGrid(),child.getColor());
+        //float secondEval = EvaluationFunction.getSickEval(testBoard.getGrid(),child.getParent().getColor());
 
-        child.setValue(firstEval-secondEval);
+        float eval = EvaluationFunction.sickerthanyouraverage(graph, child.getColor());
+
+        child.setValue(eval);
     }
 
     public void backpropagate(NodeTree child){
