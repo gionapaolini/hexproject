@@ -5,6 +5,8 @@ package AIs.FlowNetwork;
  */
 public class TestRunGraph {
     public static void main (String[] args){
-        new HexGraph(9);
+        HexGraph testGraph = new HexGraph(3);
+        testGraph.findPaths();
+
     }
 }

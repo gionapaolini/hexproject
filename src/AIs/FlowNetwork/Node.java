@@ -17,6 +17,10 @@ public class Node {
         this.i = i;
         this.j = j;
     }
+    public Node(int j){
+        adjEdges = new ArrayList<Edge>();
+        this.j = j;
+    }
 
     public void setColour(Boolean colour){
         this.colour = colour;
